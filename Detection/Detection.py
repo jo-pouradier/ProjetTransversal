@@ -35,3 +35,19 @@ def Detection():
     return()
 
 #Detection()
+
+def liveCam() :
+    cap = cv2.VideoCapture(0)
+    while(True):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        # Our operations on the frame come hereq
+        cv2.imshow("Faces found", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+    return()
+liveCam()
