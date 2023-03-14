@@ -34,7 +34,7 @@ def Detection():
     cv2.destroyAllWindows()
     return()
 
-#Detection()
+Detection()
 
 def liveCam() :
     cap = cv2.VideoCapture(0)
@@ -50,4 +50,3 @@ def liveCam() :
     cap.release()
     cv2.destroyAllWindows()
     return()
-liveCam()
