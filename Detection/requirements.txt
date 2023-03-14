@@ -1,1 +1,1 @@
-cv2
+pip install opencv-contrib-python
