@@ -14,7 +14,7 @@ def Detection():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Create the haar cascade
-        faceCascade = cv2.CascadeClassifier("Frontface.xml")
+        faceCascade = cv2.CascadeClassifier(r"Detection/Frontface.xml")
 
         # Detect faces in the image
         faces = faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30))
@@ -34,7 +34,13 @@ def Detection():
     cv2.destroyAllWindows()
     return()
 
-#Detection()
+
+
+
+Detection()
+
+
+
 
 #def liveCam() :
   #  cap = cv2.VideoCapture(0)
@@ -47,7 +53,8 @@ def Detection():
        #     break
 
     # When everything done, release the capture
-    cap.release()
-    cv2.destroyAllWindows()
-    return()
-liveCam()
+    #cap.release()
+    #cv2.destroyAllWindows()
+    #return()
+
+#liveCam()
