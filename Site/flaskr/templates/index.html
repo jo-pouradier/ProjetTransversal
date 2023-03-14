@@ -1,14 +1,32 @@
 <!DOCTYPE html>
+<head>
+    <title>Live streaming</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+
 <html>
 
-
   <body>
-    <h1>Live streaming</h1>
-    <div>
 
-        <img src="{{ url_for('video') }}" width="50%"/>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Clients</a>
+      <a href="#">Contact</a>
     </div>
-            
+    
+    <div>
+    <div id="OpenNav" onclick="openNav()">&#9776;</div>
+    <h1 id="titre">Tableau de contrôle</h1>
+     
+    </div>
+    <div>
+        <img id="cam" src="{{ url_for('streamcam') }}" />
+    </div>
     </body>
 
 
