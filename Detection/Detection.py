@@ -34,5 +34,4 @@ def Detection():
     cv2.destroyAllWindows()
     return()
 
-
-#Detection()
+Detection()
