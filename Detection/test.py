@@ -12,7 +12,8 @@ cv2.setNumThreads(8)
 
 FPS = 30
 timer = 1/FPS
-
+count_fps = 0
+timer_fps = time.perf_counter()
 prev_frame_time = 0
 new_frame_time = 1
 
@@ -22,9 +23,16 @@ while True:
     # filp image horizontaly like mirror
     img = cv2.flip(img, 1)
     # waiting fps
-    if new_frame_time - prev_frame_time < timer:
-        time.sleep(timer - (new_frame_time - prev_frame_time))
+    # if new_frame_time - prev_frame_time < timer:
+    #     time.sleep(timer - (new_frame_time - prev_frame_time))
 
+    # get fps
+    count_fps += 1
+    if time.perf_counter() - timer_fps > 1:
+        timer_fps = time.perf_counter()
+        print("FPS: ", count_fps)
+        count_fps = 0
+    
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect faces in the image
     faces = faceCascade.detectMultiScale(

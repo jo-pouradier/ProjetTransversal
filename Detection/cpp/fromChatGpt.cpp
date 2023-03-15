@@ -1,10 +1,10 @@
-#include "opencv2/opencv.hpp"
+#include <opencv2/opencv.hpp>
 
 using namespace cv;
 
 int main() {
     // Initialiser le flux vidéo de la webcam
-    VideoCapture cap(0);
+    cv::VideoCapture::VideoCapture cap(0);
     
     // Initialiser le détecteur de visages
     CascadeClassifier face_cascade;
@@ -17,7 +17,7 @@ int main() {
         
         // Convertir l'image en noir et blanc pour accélérer la détection
         Mat gray;
-        cvtColor(frame, gray, COLOR_BGR2GRAY);
+        cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
         
         // Détecter les visages dans l'image
         std::vector<Rect> faces;
