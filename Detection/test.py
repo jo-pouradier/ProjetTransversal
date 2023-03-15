@@ -1,22 +1,27 @@
 import numpy as np
 import cv2
 import time
-import numpy as np
 
-faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+faceCascade = cv2.CascadeClassifier('Frontface.xml')
+print(cv2.CAP_DSHOW)
 cap = cv2.VideoCapture(0)
 cap.set(3,640) # set Width
 cap.set(4,480) # set Height
+# cap.set(cv2.CAP_PROP_FPS, 20)
 cv2.setUseOptimized(True)
-cv2.setNumThreads(8)
+cv2.setNumThreads(1)
 
-FPS = 30
+FPS = 120
 timer = 1/FPS
 count_fps = 0
 timer_fps = time.perf_counter()
 prev_frame_time = 0
 new_frame_time = 1
 
+img = None
+
+count = 0
 while True:
     
     ret, img = cap.read()
@@ -26,6 +31,11 @@ while True:
     # if new_frame_time - prev_frame_time < timer:
     #     time.sleep(timer - (new_frame_time - prev_frame_time))
 
+    count+=1
+    print(count)
+
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    print("Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps))
     # get fps
     count_fps += 1
     if time.perf_counter() - timer_fps > 1:
