@@ -1,0 +1,3 @@
+/home/utilisateur/Documents/ProjetTransversal/Detection/Detection_cpp/CMakeFiles/Detectioncpp.dir
+/home/utilisateur/Documents/ProjetTransversal/Detection/Detection_cpp/CMakeFiles/edit_cache.dir
+/home/utilisateur/Documents/ProjetTransversal/Detection/Detection_cpp/CMakeFiles/rebuild_cache.dir
