@@ -44,11 +44,13 @@ graph TD
 ```
 <img src="./images/schemaFonctionnement.png"  width="300" height="320">
 
+## 
+
 ## Objectifs pour le Jalon 1
 
 date : 18/04 
 - mise en place d'un serveur web sur raspberry pi avec connexion possible depuis un ordinateur ou un téléphone.
-- sur ce site web il y aura le retour de la caméras avec la détection de visage et le son.
+- sur ce site web il y aura le retour de la caméras du raspberry avec la détection des visages avec le son.
 - on pourra controller les roues du robots avec le stm32 via une connexion UART.
 - on pourra emmetre du son du client vers le haut parleur du robot
 
