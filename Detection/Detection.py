@@ -4,12 +4,14 @@ import matplotlib.pyplot as plt
 
 def Detection():
     cap = cv2.VideoCapture(0)
-
+    ret = cap.set(cv2.CAP_PROP_FRAME_WIDTH,320) 
+    ret = cap.set(cv2.CAP_PROP_FRAME_HEIGHT,240)
+    # ret = cap.set(cv2.CAP_PROP_FPS,1)
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
         # Our operations on the frame come hereq
-        alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
+        #alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -23,8 +25,8 @@ def Detection():
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
-            cv2.rectangle(alphachannel, (x, y), (x+w, y+h), (0, 0, 255), 2)
-            cv2.imshow("Faces found", alphachannel)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+            cv2.imshow("Faces found", frame)
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
