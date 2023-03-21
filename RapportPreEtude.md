@@ -29,9 +29,11 @@ Le robot sera contrôlé par un ordinateur qui se connectera à une réseau loca
 ## Schéma de fonctionnement
 
 ```mermaid
-graph LR
-    A[Robot] --> B[Caméra]
-    A --> C[Microphone]
+flowchart TD
+    A[Caméra] --4 pin--> C[Raspberry]
+    C --4 pin--> B[Haut Parleur]
+    C[Raspberry] --UART--> D[STM32]
+    D --UART--> C[Robot(moteur)]
 
 ```
 
