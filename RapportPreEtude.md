@@ -31,10 +31,10 @@ Le robot sera contrôlé par un ordinateur qui se connectera à une réseau loca
 ```mermaid
 graph TD
     A[Caméra]-- 4 pin -->C[Raspberry]
-    
+    C-- 4 pin -->B[Haut Parleur]
 
 ```
-C-- 4 pin -->B[Haut Parleur]
+
     C-- UART -->D[STM32]
     D-- UART -->C[Robot(moteur)]
 
