@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-project( Detection )
-find_package( OpenCV REQUIRED )
-add_executable( Detection fromChatGpt.cpp )
-target_link_libraries( Detection ${OpenCV_LIBS} )

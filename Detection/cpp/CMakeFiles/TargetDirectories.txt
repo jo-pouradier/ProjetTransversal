@@ -1,3 +1,0 @@
-/Users/jopouradierduteil/Desktop/CPE/ProjetTransversal/ProjetTransversal/Detection/cpp/CMakeFiles/Detection.dir
-/Users/jopouradierduteil/Desktop/CPE/ProjetTransversal/ProjetTransversal/Detection/cpp/CMakeFiles/edit_cache.dir
-/Users/jopouradierduteil/Desktop/CPE/ProjetTransversal/ProjetTransversal/Detection/cpp/CMakeFiles/rebuild_cache.dir

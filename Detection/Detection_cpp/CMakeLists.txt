@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.22.1)
-project( Detectioncpp )
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-add_executable(Detectioncpp Detection.cpp )
-target_link_libraries( Detectioncpp ${OpenCV_LIBS} )
