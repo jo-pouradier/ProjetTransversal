@@ -26,7 +26,7 @@ En ces temps émotionnellement  difficile pour la population, nous voulons faire
 ## Fonctionalités
 
 <u>Pour le mode automatique</u>:  
-Notre robot pourra détecter  les obstacles grâce à une télémètre ultrason, pour les esquiver ou les contourner. Il pourra détecter les personnes pour aller vers elles grâce a une caméra et la détection de visage. Une fois proche des personnes, on utilisera le haut parleur pour parler.
+Notre robot pourra détecter  les obstacles grâce à une télémètrie ultrason, pour les esquiver ou les contourner. Il pourra détecter les personnes pour aller vers elles grâce a une caméra et la détection de visage. Une fois proche des personnes, on utilisera le haut parleur pour parler.
 
 <u>Pour le mode manuel</u>:  
 Le robot sera contrôlé par un ordinateur qui se connectera à une réseau local (un partage de connexion avec un téléphone par exemple). Le serveur web sera sur le raspberry PI en python. Le déplacement se fera grâce aux fleches directionnelle du clavier. Et on pourra parler en live grâce au micro de l'ordinateur. 
@@ -42,15 +42,15 @@ graph TD
     D<-- UART -->E[Moteur]
 
 ```
-![Schéma de fonctionnement](./images/schemaFonctionnement.png)
+<img src="./images/schemaFonctionnement.png"  width="300" height="320">
 
 ## Objectifs pour le Jalon 1
 
 date : 18/04 
-- web server sur raspberry pi avec connexion possible avec un ordinateur.
-- site web avec détection des visages (caméra sur le raspberry).
-- pouvoir contrôler les roues du robot.
-- emmètre du sons a partir du robot.
+- mise en place d'un serveur web sur raspberry pi avec connexion possible depuis un ordinateur ou un téléphone.
+- sur ce site web il y aura le retour de la caméras avec la détection de visage et le son.
+- on pourra controller les roues du robots avec le stm32 via une connexion UART.
+- on pourra emmetre du son du client vers le haut parleur du robot
 
 
 
