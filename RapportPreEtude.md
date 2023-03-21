@@ -9,8 +9,13 @@
 - Shézan MAHAMODRAZA
 
 ## Sommaire
-1. [Introduction](#introduction)
-2. [Fonctionalités](#fonctionalités)
+- [Rapport Pré Etude équipe C4](#rapport-pré-etude-équipe-c4)
+      - [Membres du groupe :](#membres-du-groupe-)
+  - [Sommaire](#sommaire)
+  - [Introduction](#introduction)
+  - [Fonctionalités](#fonctionalités)
+  - [Schéma de fonctionnement](#schéma-de-fonctionnement)
+  - [Objectifs pour le Jalon 1](#objectifs-pour-le-jalon-1)
 
 
 
@@ -37,16 +42,14 @@ graph TD
     D<-- UART -->E[Moteur]
 
 ```
-
-    
-    
+![Schéma de fonctionnement](./images/schemaFonctionnement.png)
 
 ## Objectifs pour le Jalon 1
 
 date : 18/04 
 - web server sur raspberry pi avec connexion possible avec un ordinateur.
-- site web avec détection des visages.
-- pouvoir contrôler les roues du robot avec des instructions en durs.
+- site web avec détection des visages (caméra sur le raspberry).
+- pouvoir contrôler les roues du robot.
 - emmètre du sons a partir du robot.
 
 
