@@ -33,7 +33,7 @@ graph TD
     A[Caméra]-- 4 pin -->C[Raspberry]
     C-- 4 pin -->B[Haut Parleur]
     C-- UART -->D[STM32]
-    D-- UART -->C[Robot(moteur)]
+    D-- UART -->E[Robot(moteur)]
 
 ```
 
