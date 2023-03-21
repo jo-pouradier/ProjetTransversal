@@ -29,7 +29,7 @@ Le robot sera contrôlé par un ordinateur qui se connectera à une réseau loca
 ## Schéma de fonctionnement
 
 ```mermaid
-flowchart TD
+graph LR
     A[Robot] --> B[Caméra]
     A --> C[Microphone]
 
