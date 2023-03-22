@@ -3,6 +3,7 @@
     <title>Live streaming</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
@@ -26,6 +27,9 @@
     </div>
     <div>
         <img id="cam" src="{{ url_for('streamcam') }}" />
+    </div>
+    <div>
+        <audio id="audio" controls src="{{ url_for('playSounds') }}" type="audio/x-wav;codec=pcm">test</audio>
     </div>
     </body>
 
