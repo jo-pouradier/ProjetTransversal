@@ -1,0 +1,6 @@
+Flask
+opencv-python
+numpy
+pyaudio
+keyboard
+scipy.signal
