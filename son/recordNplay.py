@@ -8,7 +8,7 @@ FORMAT = pyaudio.paInt16
 
 ## Adaptez ces paramètres 
 CHANNELS = 1
-RATE = 16000
+RATE = 44100
 high_cutoff = 1000
 low_cutoff = 200
 def butter_bandpass(data, high_cutoff,low_cutoff, fs, order=2):
@@ -41,7 +41,7 @@ while True:
 
     data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
     stream_out.write(data_output.tobytes())
-
+    #stream_in.read(CHUNK_SIZE)
     if keyboard.is_pressed('s'):
         print('End')
         break
