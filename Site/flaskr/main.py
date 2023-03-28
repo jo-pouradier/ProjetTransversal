@@ -4,6 +4,7 @@ import numpy as np
 import pyaudio
 import keyboard 
 from scipy.signal import butter, lfilter
+import wave
 
 app = Flask(__name__)
 
@@ -111,6 +112,18 @@ def genHeader(sampleRate, bitsPerSample, channels):
     o += (datasize).to_bytes(4,'little')                                    # (4byte) Data size in bytes
     return o
 
+
+
+def butter_bandpass(data, high_cutoff,low_cutoff, fs, order=2):
+        nyq = 0.4 * fs
+        high = high_cutoff/nyq
+        low = low_cutoff/nyq
+        b,a = butter(order, [low, high], btype='bandpass', analog=False)
+        y = lfilter(b,a,data)
+        y = y.astype(np.int16)
+        return y
+
+
 def recordNplay() :
     CHUNK_SIZE = 1024
     FORMAT = pyaudio.paInt16
@@ -120,15 +133,7 @@ def recordNplay() :
     RATE = 16000
     high_cutoff = 1000
     low_cutoff = 200
-    def butter_bandpass(data, high_cutoff,low_cutoff, fs, order=2):
-        nyq = 0.4 * fs
-        high = high_cutoff/nyq
-        low = low_cutoff/nyq
-        b,a = butter(order, [low, high], btype='bandpass', analog=False)
-        y = lfilter(b,a,data)
-        y = y.astype(np.int16)
-        return y
-
+    
     p = pyaudio.PyAudio()
     print('Starting audio...')
     stream_in = p.open(format=FORMAT,
@@ -154,6 +159,10 @@ def recordNplay() :
         if keyboard.is_pressed('s'):
             print('End')
             break
+
+
+
+
 # --------------------------------------------------------------------------------------------
 # Routes
 @app.route('/index')
@@ -167,10 +176,12 @@ def streamcam():
 @app.route("/recordNplay")
 def playSounds():
     def sound():
-
+        ### IL FAUT ADAPTER CES PARAM AU PARAM DE VOTRE MICRO ###
         sampleRate = 44100
         bitsPerSample = 16
         channels = 1
+        #########################################################
+
         wav_header = genHeader(sampleRate, bitsPerSample, channels)
 
         stream = audio1.open(format=FORMAT, channels=CHANNELS,
@@ -187,6 +198,49 @@ def playSounds():
                data = stream.read(CHUNK)
            yield(data)
     return Response(sound())
+
+    def sound2() :
+        CHUNK_SIZE = 1024
+        FORMAT = pyaudio.paInt16
+
+        ## Adaptez ces paramètres 
+        CHANNELS = 1
+        RATE = 16000
+        high_cutoff = 1000
+        low_cutoff = 200
+        
+        wav_header = genHeader(RATE, 16, CHANNELS)
+
+        p = pyaudio.PyAudio()
+        print('Starting audio...')
+        stream_in = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK_SIZE)
+
+        stream_out = p.open(format=FORMAT,
+                            channels=CHANNELS,
+                            rate=RATE,
+                            output=True,
+                            frames_per_buffer=CHUNK_SIZE)
+
+        first_run = True
+        while True:
+            data = stream_in.read(CHUNK_SIZE)
+            data_np = np.frombuffer(data,dtype=np.int16)
+            input = data_np.astype(np.float32)
+
+            data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
+            #stream_out.write(data_output.tobytes())
+            if first_run:
+               data = wav_header + data_output.tobytes()
+               first_run = False
+            else:
+               data = data_output.tobytes()
+            yield(data)
+    #return Response(sound2())
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)

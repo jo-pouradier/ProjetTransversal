@@ -5,7 +5,7 @@ import keyboard
 CHUNK = 1024  # taille des données audio
 FORMAT = pyaudio.paInt16  # format des données audio (16 bits)
 CHANNELS = 1  # nombre de canaux (stéréo)
-RATE = 16000  # fréquence d'échantillonnage (16 skHz)
+RATE = 44100  # fréquence d'échantillonnage (16 skHz)
 WAVE_OUTPUT_FILENAME = "enregistrement.wav"  # nom du fichiers
 
 
@@ -39,3 +39,4 @@ while True:
 stream.stop_stream()
 stream.close()
 p.terminate()
+                           
