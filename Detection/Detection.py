@@ -4,18 +4,19 @@ import matplotlib.pyplot as plt
 
 def Detection():
 
-    #Local variables
     
-    normmax=0
-    Centreproche=0
     compteur=0
-    RapportConv=9/32
+    Anglex=0
+    Angley=0
 
-    
+
+    #Camera variables
     FPS=10
     WIDTH=320
     HEIGHT=240
-    Screenmiddle=(WIDTH/2,HEIGHT/2)
+    Screenmiddle=(WIDTH//2,HEIGHT//2)
+    #Conversion in degrees
+    RapportConv=90/WIDTH
 
 
     cap = cv2.VideoCapture(0)
@@ -30,6 +31,13 @@ def Detection():
 
     while(True):
         
+
+    
+        #Local variables
+        airemax=0
+        Centreproche=0
+
+
         # Capture frame-by-frame
         ret, frame = cap.read()
         # Our operations on the frame come hereq
@@ -45,19 +53,28 @@ def Detection():
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-            if compteur%(FPS//2) == 0:
-                normlocal=np.sqrt( abs(x+w-x)**2 + abs(y+h-y) **2  )
-                if normlocal>=normmax:
-                    Centreproche=(  (x+x+w)/2,(y+h+y)/2)
-                    Anglex=int((Centreproche[0]-Screenmiddle[0])*RapportConv)
-                    Angley=int((Centreproche[1]-Screenmiddle[1])*RapportConv)
-                    print(Anglex,Angley)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+            #On calcule l'aire du rectangle 
+            airelocale=int(abs(x+w-x)*abs(y+h-y))
+            #On garde en mémoire uniquement le plus grand rectangle
+            if airelocale>=airemax:
+                airemax=airelocale
+                #On convertit la distance en pixel en distance "angulaire" pour le servomoteur
+                Centreproche=(  (x+x+w)/2,(y+h+y)/2)
+                Anglex=int((Centreproche[0]-Screenmiddle[0])*RapportConv)
+                Angley=int((Centreproche[1]-Screenmiddle[1])*RapportConv)
             cv2.imshow("Faces found", frame)
         
+
+
+        #On print l'angle de rotation du servo afin de centrer la camera sur l'image
+        print(Anglex,Angley)
         #On print le nombre de visage
         print ("Found {0} faces!".format(len(faces)))
+
         compteur+=1
+
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
