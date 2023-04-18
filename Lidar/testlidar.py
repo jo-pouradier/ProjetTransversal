@@ -8,7 +8,7 @@ health = lidar.get_health()
 print(health)
 
 for i, scan in enumerate(lidar.iter_scans()):
-    print('%d: Got %d measurments' % (i, len(scan)))
+    print('%d: Got %d measurments' %(i, len(scan)))
     if i > 10:
         break 
 
