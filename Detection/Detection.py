@@ -11,12 +11,13 @@ def Detection():
 
 
     #Camera variables
-    FPS=10
+    FPS=8
     WIDTH=320
     HEIGHT=240
     Screenmiddle=(WIDTH//2,HEIGHT//2)
     #Conversion in degrees
-    RapportConv=90/WIDTH
+    RapportConvx= (2/WIDTH)
+    RapportConvy= (2/HEIGHT)
 
 
     cap = cv2.VideoCapture(0)
@@ -61,9 +62,9 @@ def Detection():
                 airemax=airelocale
                 #On convertit la distance en pixel en distance "angulaire" pour le servomoteur
                 Centreproche=(  (x+x+w)/2,(y+h+y)/2)
-                Anglex=int((Centreproche[0]-Screenmiddle[0])*RapportConv)
-                Angley=int((Centreproche[1]-Screenmiddle[1])*RapportConv)
-            cv2.imshow("Faces found", frame)
+                Anglex=(Centreproche[0]-Screenmiddle[0])*RapportConvx + 1.5
+                Angley=(Centreproche[1]-Screenmiddle[1])*RapportConvy  + 1.5
+                cv2.imshow("Faces found", frame)
         
 
 
