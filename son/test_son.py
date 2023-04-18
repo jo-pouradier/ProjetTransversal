@@ -1,6 +1,7 @@
+
 import pyaudio
 import numpy as np
-
+'''
 # Define the frequency and duration of the tone
 frequency = 550 # Hz
 duration = 10 # seconds
@@ -26,3 +27,10 @@ stream.write(audio_data)
 stream.stop_stream()
 stream.close()
 p.terminate()
+'''
+pa = pyaudio.Pyaudio()
+
+for i in range(pa.get_device_count()):
+    info = pa.get_device_info_by_index(i)
+    if info['maxInputChannels'] > 0:
+        print(f"Index : {i}, Nom : {info['name']}")
