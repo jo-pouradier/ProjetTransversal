@@ -164,7 +164,7 @@ def index():
 
 @app.route("/livecam")
 def streamcam():
-    return Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(liveCam(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
 def playSounds():
@@ -191,48 +191,6 @@ def playSounds():
                data = stream.read(CHUNK)
            yield(data)
     return Response(sound())
-
-    def sound2() :
-        CHUNK_SIZE = 1024
-        FORMAT = pyaudio.paInt16
-
-        ## Adaptez ces paramètres 
-        CHANNELS = 1
-        RATE = 16000
-        high_cutoff = 1000
-        low_cutoff = 200
-        
-        wav_header = genHeader(RATE, 16, CHANNELS)
-
-        p = pyaudio.PyAudio()
-        print('Starting audio...')
-        stream_in = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        input=True,
-                        frames_per_buffer=CHUNK_SIZE)
-
-        stream_out = p.open(format=FORMAT,
-                            channels=CHANNELS,
-                            rate=RATE,
-                            output=True,
-                            frames_per_buffer=CHUNK_SIZE)
-
-        first_run = True
-        while True:
-            data = stream_in.read(CHUNK_SIZE)
-            data_np = np.frombuffer(data,dtype=np.int16)
-            input = data_np.astype(np.float32)
-
-            data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
-            #stream_out.write(data_output.tobytes())
-            if first_run:
-               data = wav_header + data_output.tobytes()
-               first_run = False
-            else:
-               data = data_output.tobytes()
-            yield(data)
-    #return Response(sound2())
 
 
 if __name__ == '__main__':
