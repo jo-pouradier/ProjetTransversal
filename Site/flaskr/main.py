@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 camera= cv2.VideoCapture(0)
 
+
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
@@ -18,6 +19,11 @@ RECORD_SECONDS = 0
  
 audio1 = pyaudio.PyAudio()
  
+for i in range(audio1.get_device_count()):
+    info = audio1.get_device_info_by_index(i)
+    if info['maxInputChannels'] > 0:
+        print(f"Index : {i}, Nom : {info['name']}")
+
 def liveCam() :
     '''Live camera feed
     Description: this basic function will return the camera frame as a byte stream 
@@ -133,7 +139,8 @@ def genHeader(sampleRate, bitsPerSample, channels):
                     channels=CHANNELS,
                     rate=RATE,
                     input=True,
-                    frames_per_buffer=CHUNK_SIZE)
+                    frames_per_buffer=CHUNK_SIZE,
+                    input_device_index=0)
 
     stream_out = p.open(format=FORMAT,
                         channels=CHANNELS,
@@ -178,7 +185,7 @@ def playSounds():
         wav_header = genHeader(sampleRate, bitsPerSample, channels)
 
         stream = audio1.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, input=True,input_device_index=1,
+                        rate=RATE, input=True,input_device_index=23,
                         frames_per_buffer=CHUNK)
         print("recording...")
         #frames = []
