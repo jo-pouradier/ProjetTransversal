@@ -47,24 +47,25 @@ def Detection():
 
         # Create the haar cascade
         faceCascade = cv2.CascadeClassifier(r"Detection/Frontface.xml")
-
         # Detect faces in the image
         faces = faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30))
-        
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             #On calcule l'aire du rectangle 
             airelocale=int(abs(x+w-x)*abs(y+h-y))
+            face_color = frame[y:y + h, x:x + w]
             #On garde en mémoire uniquement le plus grand rectangle
+            
+            
             if airelocale>=airemax:
                 airemax=airelocale
                 #On convertit la distance en pixel en distance "angulaire" pour le servomoteur
                 Centreproche=(  (x+x+w)/2,(y+h+y)/2)
                 Anglex=(Centreproche[0]-Screenmiddle[0])*RapportConvx + 1.5
                 Angley=(Centreproche[1]-Screenmiddle[1])*RapportConvy  + 1.5
-                cv2.imshow("Faces found", frame)
+            cv2.imshow("Faces found", frame)
         
 
 
@@ -85,28 +86,4 @@ def Detection():
     cv2.destroyAllWindows()
     return()
  
- 
-
-
-
 Detection()
-
-
-
-
-#def liveCam() :
-  #  cap = cv2.VideoCapture(0)
-   # while(True):
-        # Capture frame-by-frame
-    #    ret, frame = cap.read()
-        # Our operations on the frame come hereq
-     #   cv2.imshow("Faces found", frame)
-      #  if cv2.waitKey(1) & 0xFF == ord('q'):
-       #     break
-
-    # When everything done, release the capture
-    #cap.release()
-    #cv2.destroyAllWindows()
-    #return()
-
-#liveCam()
