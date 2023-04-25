@@ -4,6 +4,8 @@ import numpy as np
 import pyaudio
 import keyboard
 import serial
+import keyboard 
+import obstacle as obs
 #from scipy.signal import butter, lfilter
 
 
@@ -13,8 +15,6 @@ ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
 
 
-import keyboard 
-import obstacle as obs
 #from scipy.signal import butter, lfilter
 app = Flask(__name__)
 
@@ -226,23 +226,23 @@ def deplacements():
     print(get_key['key'])
     if  (get_key['key'] == 'z'):
         print("move forward")
-        ser.write(bytes("avancerR", 'utf8'))
+        ser.write(bytes("avancerR\r", 'utf8'))
         return""
     if  (get_key['key'] == 'q'):
         print("turn left")
-        #serial.write(bytes("gaucheR", 'utf8'))
+        serial.write(bytes("gaucheR\r", 'utf8'))
         return""
     if  (get_key['key'] == 's'):
         print("move back")
-        #serial.write(bytes("arriereR", 'utf8'))
+        serial.write(bytes("arriereR\r", 'utf8'))
         return""
     if  (get_key['key'] == 'd'):
         print("turn right")
-        #serial.write(bytes("droiteR", 'utf8'))
+        serial.write(bytes("droiteR\r", 'utf8'))
         return""
     if (get_key['key'] == ' '):
         print("stop")
-        #serial.write(bytes("stop", 'utf8'))
+        serial.write(bytes("stop\r", 'utf8'))
         return""
     if (get_key['key'] == 'ArrowUp'):
         print("camera up")
