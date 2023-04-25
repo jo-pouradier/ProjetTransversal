@@ -238,7 +238,7 @@ def deplacements():
         return""
     if  (get_key['key'] == 'd'):
         print("turn right")
-        ser.write(bytes("droiteR\r", 'utf8'))
+        ser.write("droiteR\r".encode())
         return""
     if (get_key['key'] == ' '):
         print("stop")
