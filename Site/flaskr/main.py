@@ -2,8 +2,16 @@ from flask import Flask,Response,render_template,request
 import cv2,time
 import numpy as np
 import pyaudio
-import keyboard 
+import keyboard
+import serial
 #from scipy.signal import butter, lfilter
+
+
+#ATTENTION : VERIFIER PORT + BAUD RATE
+ser = serial.Serial('COM25')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200 #change this to your actual baud rate
+
 
 app = Flask(__name__)
 
@@ -206,23 +214,54 @@ partie du code pour piloter le robot à distance : quand on appuie sur une touch
 une fonction qui transmet en langage uart l'opération voulue 
 """
 
-@app.route('/appeler_fonction_avancer', methods=['POST'])
-def appeler_fonction_avancer():
+@app.route('/deplacements', methods=['POST'])
+def deplacements():
     # Appeler la fonction correspondante ici
-    avancer()
-    print("z")
-    return ''
+    print("test")
+    get_key = request.get_json(force=True)
+    print(get_key['key'])
+    if  (get_key['key'] == 'z'):
+        print("move forward")
+        ser.write(bytes("avancerR", 'utf8'))
+        return""
+    if  (get_key['key'] == 'q'):
+        print("turn left")
+        #serial.write(bytes("gaucheR", 'utf8'))
+        return""
+    if  (get_key['key'] == 's'):
+        print("move back")
+        #serial.write(bytes("arriereR", 'utf8'))
+        return""
+    if  (get_key['key'] == 'd'):
+        print("turn right")
+        #serial.write(bytes("droiteR", 'utf8'))
+        return""
+    if (get_key['key'] == ' '):
+        print("stop")
+        #serial.write(bytes("stop", 'utf8'))
+        return""
+    if (get_key['key'] == 'ArrowUp'):
+        print("camera up")
+        #serial.write(bytes("hautC", 'utf8'))
+        return""
+    if (get_key['key'] == 'ArrowDown'):
+        print("camera down")
+        #serial.write(bytes("basC", 'utf8'))
+        return""
+    if (get_key['key'] == 'ArrowLeft'):
+        print("camera left")
+        #serial.write(bytes("gaucheC", 'utf8'))
+        return""
+    if (get_key['key'] == 'ArrowRight'):
+        print("camera right")
+        #serial.write(bytes("droiteC", 'utf8'))
+        return""
+    return ""
 
-def avancer():
-    print("On rentre dans la fonction avancer")
-    return "mogo 1:20 2:20"
-
-
-
-
-
-
+@app.route('/stop', methods=['POST'])
+def stop() :
+    #serial.write(bytes("stop", 'utf8'))
+    return""
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
-    
