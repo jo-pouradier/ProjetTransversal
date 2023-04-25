@@ -13,6 +13,9 @@ ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
 
 
+import keyboard 
+import obstacle as obs
+#from scipy.signal import butter, lfilter
 app = Flask(__name__)
 
 camera= cv2.VideoCapture(0)
@@ -31,6 +34,7 @@ for i in range(audio1.get_device_count()):
     info = audio1.get_device_info_by_index(i)
     if info['maxInputChannels'] > 0:
         print(f"Index : {i}, Nom : {info['name']}")
+
 
 def liveCam() :
     '''Live camera feed

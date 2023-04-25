@@ -19,5 +19,5 @@ def obstacle():
         lidar.stop()
         lidar.stop_motor()
         lidar.disconnect()  
-        return(flag)
+        return(flag==1)
 
