@@ -171,7 +171,7 @@ def index():
 
 @app.route("/livecam")
 def streamcam():
-    return Response(liveCam(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
 def playSounds():
@@ -185,7 +185,7 @@ def playSounds():
         wav_header = genHeader(sampleRate, bitsPerSample, channels)
 
         stream = audio1.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, input=True,input_device_index=23,
+                        rate=RATE, input=True,input_device_index=1,
                         frames_per_buffer=CHUNK)
         print("recording...")
         #frames = []
