@@ -10,3 +10,8 @@ pip install flask
 ```bash
 python -m flask --app ./Site/flaskr/main run --host=0.0.0.0 
 ```
+
+##Installation des modules pour lancer le site
+'''bash 
+pip install -r .\requirements.txt
+'''

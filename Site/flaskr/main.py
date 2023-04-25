@@ -1,4 +1,4 @@
-from flask import Flask,Response,render_template
+from flask import Flask,Response,render_template,request
 import cv2,time
 import numpy as np
 import pyaudio
@@ -198,6 +198,29 @@ def playSounds():
                data = stream.read(CHUNK)
            yield(data)
     return Response(sound())
+
+
+
+"""
+partie du code pour piloter le robot à distance : quand on appuie sur une touche, on appelle 
+une fonction qui transmet en langage uart l'opération voulue 
+"""
+
+@app.route('/appeler_fonction_avancer', methods=['POST'])
+def appeler_fonction_avancer():
+    # Appeler la fonction correspondante ici
+    avancer()
+    print("z")
+    return ''
+
+def avancer():
+    print("On rentre dans la fonction avancer")
+    return "mogo 1:20 2:20"
+
+
+
+
+
 
 
 if __name__ == '__main__':
