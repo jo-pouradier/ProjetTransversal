@@ -230,19 +230,19 @@ def deplacements():
         return""
     if  (get_key['key'] == 'q'):
         print("turn left")
-        serial.write(bytes("gaucheR\r", 'utf8'))
+        ser.write(bytes("gaucheR\r", 'utf8'))
         return""
     if  (get_key['key'] == 's'):
         print("move back")
-        serial.write(bytes("arriereR\r", 'utf8'))
+        ser.write(bytes("arriereR\r", 'utf8'))
         return""
     if  (get_key['key'] == 'd'):
         print("turn right")
-        serial.write(bytes("droiteR\r", 'utf8'))
+        ser.write(bytes("droiteR\r", 'utf8'))
         return""
     if (get_key['key'] == ' '):
         print("stop")
-        serial.write(bytes("stop\r", 'utf8'))
+        ser.write(bytes("stop\r", 'utf8'))
         return""
     if (get_key['key'] == 'ArrowUp'):
         print("camera up")
