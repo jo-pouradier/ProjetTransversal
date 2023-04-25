@@ -3,3 +3,4 @@ opencv-python
 numpy
 pyaudio
 keyboard
+rplidar
