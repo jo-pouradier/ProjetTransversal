@@ -230,9 +230,6 @@ une fonction qui transmet en langage uart l'opération voulue
 # get_key = ""
 @app.route('/deplacements', methods=['POST'])
 def deplacements():
-    # Appeler la fonction correspondante ici
-    print("test")
-    commande = ""
     get_key = request.get_json(force=True)
     if get_key !=  CONFIG["last_get_key"] :
         print(get_key['key'])
