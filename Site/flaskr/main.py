@@ -1,4 +1,4 @@
-from flask import Flask,Response,render_template,request
+from flask import Flask,Response,render_template,request, abort
 import cv2,time
 import numpy as np
 import pyaudio
@@ -6,6 +6,8 @@ import keyboard
 import serial
 import keyboard 
 import obstacle as obs
+from flask_httpauth import HTTPBasicAuth
+
 #from scipy.signal import butter, lfilter
 
 
@@ -13,6 +15,30 @@ import obstacle as obs
 ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
 ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
+
+#Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
+auth = HTTPBasicAuth()
+
+allowed_ips = ['134.214.51.113','192.168.56.1','192.168.202.1','182.168.252.154']#ip des appereils que l'on autorise à se connecter au serveur
+
+users = {
+	"optimus": "optimus",
+}
+
+@auth.verify_password
+def verify_password(username,password):
+    if username in users and users[username]==password:
+        return username
+
+
+def check_ip(f):
+    def wrapped(*args, **kwargs):
+        client_ip = request.remote_addr
+        if client_ip not in allowed_ips:
+            abort(403)  # Forbidden
+        return f(*args, **kwargs)
+    return wrapped
+
 
 
 #from scipy.signal import butter, lfilter
@@ -178,6 +204,8 @@ def genHeader(sampleRate, bitsPerSample, channels):
 # --------------------------------------------------------------------------------------------
 # Routes
 @app.route('/index')
+@auth.login_required
+@check_ip
 def index():
     return render_template('index.html')
 
@@ -266,6 +294,10 @@ def deplacements():
 def stop() :
     #serial.write(bytes("stop", 'utf8'))
     return""
+
+@app.route('/protected')
+def protected_route():
+    return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
