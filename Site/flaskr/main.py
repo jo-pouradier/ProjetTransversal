@@ -11,7 +11,7 @@ import obstacle as obs
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+ser = serial.Serial('COM6')#change this to the name of your port
 ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
 
@@ -253,16 +253,16 @@ def deplacements():
             ser.write(bytes("stop\r", 'utf8'))
         elif (get_key['key'] == 'ArrowUp'):
             print("camera up")
-            ser.write(bytes("hautC", 'utf8'))
+            ser.write(bytes("hautC\r", 'utf8'))
         elif (get_key['key'] == 'ArrowDown'):
             print("camera down")
-            ser.write(bytes("basC", 'utf8'))
+            ser.write(bytes("basC\r", 'utf8'))
         elif (get_key['key'] == 'ArrowLeft'):
             print("camera left")
-            ser.write(bytes("gaucheC", 'utf8'))
+            ser.write(bytes("gaucheC\r", 'utf8'))
         elif (get_key['key'] == 'ArrowRight'):
             print("camera right")
-            ser.write(bytes("droiteC", 'utf8'))
+            ser.write(bytes("droiteC\r", 'utf8'))
         else : 
             print("stop")
             ser.write(bytes("stop\r", 'utf8'))
