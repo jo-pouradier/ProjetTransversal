@@ -1,4 +1,4 @@
-from flask import Flask,Response,render_template,request, abort
+import flask
 import cv2,time
 import numpy as np
 import pyaudio
@@ -7,9 +7,8 @@ import serial
 import keyboard 
 import obstacle as obs
 from flask_httpauth import HTTPBasicAuth
-
+import time
 #from scipy.signal import butter, lfilter
-
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
@@ -34,16 +33,16 @@ def verify_password(username,password):
 
 def check_ip(f):
     def wrapped(*args, **kwargs):
-        client_ip = request.remote_addr
+        client_ip = flask.request.remote_addr
         if client_ip not in allowed_ips:
-            abort(403)  # Forbidden
+            flask.abort(403)  # Forbidden
         return f(*args, **kwargs)
     return wrapped
 
 
 
 #from scipy.signal import butter, lfilter
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 camera= cv2.VideoCapture(0)
 
@@ -213,11 +212,11 @@ def genHeader(sampleRate, bitsPerSample, channels):
 @auth.login_required
 @check_ip
 def index():
-    return render_template('index.html')
+    return flask.render_template('index.html')
 
 @app.route("/livecam")
 def streamcam():
-    return Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return flask.Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
 def playSounds():
@@ -243,7 +242,7 @@ def playSounds():
            else:
                data = stream.read(CHUNK)
            yield(data)
-    return Response(sound())
+    return flask.Response(sound())
 
 
 
@@ -258,11 +257,16 @@ une fonction qui transmet en langage uart l'opération voulue
 # get_key = ""
 @app.route('/deplacements', methods=['POST'])
 def deplacements():
-    get_key = request.get_json(force=True)
+    get_key = flask.request.get_json(force=True)
     if get_key !=  CONFIG["last_get_key"] :
         print(get_key['key'])
         if  (get_key['key'] == 'z'):
             print("move forward")
+            n =100_000
+            start = time.perf_counter()
+            testFast(n)
+            end = time.perf_counter()
+            print(f'{end-start: .8f} seconds for {n} loops in testFast')
             ser.write(bytes("avancerR\r", 'utf8'))
         elif  (get_key['key'] == 'q'):
             print("turn left")
@@ -303,5 +307,16 @@ def stop() :
 def protected_route():
     return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
 
-if __name__ == '__main__':
+def testFast(x):
+    y = 0
+    for i in range(0, x):
+        y *= i
+    return y
+
+
+
+def main():
     app.run(host='0.0.0.0', port=5001)
+
+if __name__ == '__main__':
+    main()

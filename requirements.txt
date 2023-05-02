@@ -4,3 +4,5 @@ numpy
 pyaudio
 keyboard
 rplidar
+pyinstaller
+http-basic-auth
