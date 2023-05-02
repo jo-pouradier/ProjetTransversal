@@ -1,6 +1,7 @@
 import pyaudio
 import wave
 import keyboard
+import speech_recognition as sr
 
 CHUNK = 1024  # taille des données audio
 FORMAT = pyaudio.paInt16  # format des données audio (16 bits)
@@ -39,4 +40,3 @@ while True:
 stream.stop_stream()
 stream.close()
 p.terminate()
-                           
