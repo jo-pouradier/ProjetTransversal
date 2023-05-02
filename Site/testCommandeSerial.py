@@ -5,3 +5,4 @@ ser.baudrate = 115200
 ser.write("avancerR\n\r".encode())
 ser.close()
 print("avancerR")
+
