@@ -2,8 +2,20 @@ from flask import Flask,Response,render_template,request
 import cv2,time
 import numpy as np
 import pyaudio
+import keyboard
+import serial
 import keyboard 
 import obstacle as obs
+#from scipy.signal import butter, lfilter
+
+
+
+#ATTENTION : VERIFIER PORT + BAUD RATE
+ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200 #change this to your actual baud rate
+
+
 #from scipy.signal import butter, lfilter
 app = Flask(__name__)
 
@@ -15,6 +27,11 @@ CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
 RECORD_SECONDS = 0
+
+#Intialisation for keys:
+CONFIG =  {
+    "last_get_key":""
+}
 
  
 audio1 = pyaudio.PyAudio()
@@ -207,23 +224,52 @@ partie du code pour piloter le robot à distance : quand on appuie sur une touch
 une fonction qui transmet en langage uart l'opération voulue 
 """
 
-@app.route('/appeler_fonction_avancer', methods=['POST'])
-def appeler_fonction_avancer():
-    # Appeler la fonction correspondante ici
-    avancer()
-    print("z")
-    return ''
 
-def avancer():
-    print("On rentre dans la fonction avancer")
-    return "mogo 1:20 2:20"
+#Intialisation :
+# global get_key
+# get_key = ""
+@app.route('/deplacements', methods=['POST'])
+def deplacements():
+    get_key = request.get_json(force=True)
+    if get_key !=  CONFIG["last_get_key"] :
+        print(get_key['key'])
+        if  (get_key['key'] == 'z'):
+            print("move forward")
+            ser.write(bytes("avancerR\r", 'utf8'))
+        elif  (get_key['key'] == 'q'):
+            print("turn left")
+            ser.write(bytes("gaucheR\r", 'utf8'))
+        elif  (get_key['key'] == 's'):
+            print("move back")
+            ser.write(bytes("arriereR\r", 'utf8'))
+        elif  (get_key['key'] == 'd'):
+            print("turn right")
+            ser.write(bytes("droiteR\r", 'utf8'))
+        elif (get_key['key'] == ' '):
+            print("stop")
+            ser.write(bytes("stop\r", 'utf8'))
+        elif (get_key['key'] == 'ArrowUp'):
+            print("camera up")
+            ser.write(bytes("hautC\r", 'utf8'))
+        elif (get_key['key'] == 'ArrowDown'):
+            print("camera down")
+            ser.write(bytes("basC\r", 'utf8'))
+        elif (get_key['key'] == 'ArrowLeft'):
+            print("camera left")
+            ser.write(bytes("gaucheC\r", 'utf8'))
+        elif (get_key['key'] == 'ArrowRight'):
+            print("camera right")
+            ser.write(bytes("droiteC\r", 'utf8'))
+        else : 
+            print("stop")
+            ser.write(bytes("stop\r", 'utf8'))
+    CONFIG["last_get_key"] = get_key
+    return""
 
-
-
-
-
-
+@app.route('/stop', methods=['POST'])
+def stop() :
+    ser.write(bytes("stop", 'utf8'))
+    return""
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
-    

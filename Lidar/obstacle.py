@@ -21,3 +21,4 @@ def obstacle():
         lidar.disconnect()  
         return(flag)
 
+obstacle()
