@@ -6,3 +6,4 @@ keyboard
 rplidar
 pyinstaller
 http-basic-auth
+serial

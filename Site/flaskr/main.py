@@ -12,9 +12,9 @@ import time
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
-ser.flushInput()
-ser.baudrate = 115200 #change this to your actual baud rate
+# ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+# ser.flushInput()
+# ser.baudrate = 115200 #change this to your actual baud rate
 
 #Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
 auth = HTTPBasicAuth()
