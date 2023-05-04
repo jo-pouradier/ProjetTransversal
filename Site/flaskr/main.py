@@ -63,12 +63,12 @@ COMMANDES :dict = {
         'q' : 'gaucheR\r',
         's' : 'arriereR\r',
         'd' : 'droiteR\r',
-        ' ' : 'stopR\r',
+        ' ' : 'stop\r',
         'ArrowUp' : 'hautC\r',
         'ArrowDown' : 'basC\r',
         'ArrowLeft' : 'gaucheC\r',
         'ArrowRight' : 'droiteC\r',
-        'Enter' : 'stopC\r',
+        'Enter' : 'stop\r',
     }
  
 audio1 = pyaudio.PyAudio()
