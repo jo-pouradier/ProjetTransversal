@@ -55,15 +55,14 @@ RECORD_SECONDS = 0
 
 #Intialisation for keys:
 CONFIG =  {
-    "last_get_key":""
+    
 }
-COMMANDES = {
+COMMANDES :dict = {
         'z' : 'avancerR\r',
         'q' : 'gaucheR\r',
         's' : 'arriereR\r',
         'd' : 'droiteR\r',
         ' ' : 'stopR\r',
-        'a' : 'auto\r',
         'ArrowUp' : 'hautC\r',
         'ArrowDown' : 'basC\r',
         'ArrowLeft' : 'gaucheC\r',
@@ -302,9 +301,16 @@ def deplacements():
     # else : 
     #     print("stop")
     #     ser.write(bytes("stop\r", 'utf8'))
-    ser.write(bytes(get_key['key'], 'utf8'))
+
+    # gestion du mode automatique
+    if get_key['key'] == 'a':
+        print("mode automatique")
+
+    if get_key['key'] in COMMANDES.keys():
+        ser.write(bytes(COMMANDES[get_key['key']], 'utf8'))
+        return 200
     # CONFIG["last_get_key"] = get_key
-    return 200
+    return 400
 
 @app.route('/stop', methods=['POST'])
 def stop() :
