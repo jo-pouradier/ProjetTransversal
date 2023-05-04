@@ -5,7 +5,7 @@ import cv2
 import multiprocessing
 from flaskserver import FlaskServer
 from CameraServer import CameraServer
-#from robotserver import RobotServer
+from RobotServer import RobotServer
 
 
 
@@ -13,8 +13,6 @@ from CameraServer import CameraServer
 class App :
     def __init__(self) :
         self.sharedVariables = ThreadSafeDict()
-        
-        
         cap = cv2.VideoCapture(0) # Replace 0 with your camera index if you have multiple cameras
         res, image = cap.read()
         cap.release()

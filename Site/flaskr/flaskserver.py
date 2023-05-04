@@ -11,8 +11,11 @@ class FlaskServer:
         self.auth.verify_password(self.verify_password)
         # add decoration to check ip address with allowed_ips
         #self.app.before_request(self.check_ip)
-        self.app.add_url_rule('/livecam', 'livecam', self.livecam)
+        self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
+
+        self.app.add_url_rule('/commandes', 'commandes',self.auth.login_required(self.commandes), methods=['POST'])
         self.sharedFrame = sharedFrame
+        self.sharedVariables = sharedVariables
 
       
 
@@ -47,8 +50,7 @@ class FlaskServer:
     def livecam(self):
         return Response(self.genFrames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     def commandes(self):
-        return self.commandes.run()
-    
+        self.sharedVariables['commande'] = request.get_json(force=True)
     def run(self):
         self.app.run(host="0.0.0.0", debug=False)
 
