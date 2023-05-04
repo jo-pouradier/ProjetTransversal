@@ -6,12 +6,12 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
-let lastJson = {};
+// let lastJson = {};
+// let jsonData = event.key;
+// if (JSON.stringify(jsonData) !== '{}' || JSON.stringify(lastJSON) !== '{}'){
 document.addEventListener('keydown', function(event) {
-  let jsonData = event.key;
-
-  if (JSON.stringify(jsonData) !== '{}' || JSON.stringify(lastJSON) !== '{}'){
   // Envoie une requête POST à l'URL '/appeler_fonction'
+  // on peut envoyer plusieurs fois la meme commande 
   var xhr = new XMLHttpRequest();
   var url = '/deplacements';
   xhr.open("POST",url,true);
@@ -19,14 +19,4 @@ document.addEventListener('keydown', function(event) {
   var send_data = {key:event.key};
   xhr.send(JSON.stringify(send_data));
   lastJson = jsonData;
-  }
-  
-
-  //fetch('/appeler_fonction', {
-    //  method: 'POST' ,
-      //headers: {
-        //"key": event.key
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      //},
-    //});
 });
