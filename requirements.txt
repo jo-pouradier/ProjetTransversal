@@ -7,3 +7,5 @@ rplidar
 pyinstaller
 http-basic-auth
 serial
+SpeechRecognition
+Wave
