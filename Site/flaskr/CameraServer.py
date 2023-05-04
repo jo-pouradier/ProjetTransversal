@@ -25,7 +25,7 @@ class CameraServer() :
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,self.cam_config["WIDTH"]) 
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,self.cam_config["HEIGHT"])
         self.cap.set(cv2.CAP_PROP_FPS,self.cam_config["FPS"])
-        
+
     def liveCam(self) :
         '''Live camera feed
         Description: this basic function will return the camera frame as a byte stream 
@@ -36,6 +36,8 @@ class CameraServer() :
         while True:
             ## read the camera frame
             success,frame= self.cap.read()
+            frame = cv2.flip(frame, 1)
+
             if not success:
                 break
             else:
