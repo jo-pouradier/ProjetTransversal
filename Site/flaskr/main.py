@@ -13,7 +13,7 @@ import speech_to_text as stt
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
 ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
 
@@ -63,12 +63,12 @@ COMMANDES :dict = {
         'q' : 'gaucheR\r',
         's' : 'arriereR\r',
         'd' : 'droiteR\r',
-        ' ' : 'stopR\r',
+        ' ' : 'stop\r',
         'ArrowUp' : 'hautC\r',
         'ArrowDown' : 'basC\r',
         'ArrowLeft' : 'gaucheC\r',
         'ArrowRight' : 'droiteC\r',
-        'Enter' : 'stopC\r',
+        'Enter' : 'stop\r',
     }
  
 audio1 = pyaudio.PyAudio()
@@ -211,7 +211,7 @@ def playSounds():
            yield(data)
     
     a = stt.speechRecognition()
-    a.continuous_speech_to_text(Response(sound()))
+    a.continuous_speech_to_text(sound())
     return flask.Response(sound())
 
 
