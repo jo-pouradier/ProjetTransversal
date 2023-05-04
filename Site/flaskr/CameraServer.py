@@ -21,7 +21,11 @@ class CameraServer() :
         self.cam_config["RapportConvx"] = (2/self.cam_config["WIDTH"])
         self.cam_config["RapportConvy"] = (2/self.cam_config["HEIGHT"])
         
-
+        #Implementing our parameters
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,self.cam_config["WIDTH"]) 
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,self.cam_config["HEIGHT"])
+        self.cap.set(cv2.CAP_PROP_FPS,self.cam_config["FPS"])
+        
     def liveCam(self) :
         '''Live camera feed
         Description: this basic function will return the camera frame as a byte stream 
@@ -42,10 +46,7 @@ class CameraServer() :
 
     def Detection(self):
 
-        #Implementing our parameters
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,self.cam_config["WIDTH"]) 
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,self.cam_config["HEIGHT"])
-        self.cap.set(cv2.CAP_PROP_FPS,self.cam_config["FPS"])
+
 
         while True:
             #Local variables
