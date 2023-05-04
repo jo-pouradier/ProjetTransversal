@@ -36,7 +36,6 @@ class CameraServer() :
         while True:
             ## read the camera frame
             success,frame= self.cap.read()
-            frame = cv2.flip(frame, 1)
 
             if not success:
                 break
