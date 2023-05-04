@@ -61,40 +61,42 @@ class CameraServer() :
             # Create the haar cascade
             
             # Detect faces in the image
-            faces = self.cam_config["faceCascade"].detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30))
+            faces = self.cam_config["faceCascade"].detectMultiScale(
+                gray,
+                scaleFactor=1.1,
+                minNeighbors=5,
+                minSize=(30, 30)
+            )
 
             # Draw a rectangle around the faces
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
                 #Calcul the area of the rectangle
                 airelocale=int(abs(x+w-x)*abs(y+h-y))
-                face_color = frame[y:y + h, x:x + w]
                 #Only keeping in memory the largest recangle
                 
                 
                 if airelocale>=airemax:
                     airemax=airelocale
                     #Converting the pixel-distance  pixel in angular distance for the servo motor
-                    
-                    Anglex=(Centreproche[0]-self.cam_config["Screenmiddle[0]"])*self.cam_config["RapportConvx"] + 1.5
-                    Angley=(Centreproche[1]-self.cam_config["Screenmiddle[1]"])*self.cam_config["RapportConvy"]  + 1.5
-                # cv2.imshow("Faces found", frame)
+                    Centreproche=((x+x+w)/2,(y+h+y)/2)
+
+                    self.cam_config["anglex"]=(Centreproche[0]-self.cam_config["Screenmiddle"][0])*self.cam_config["RapportConvx"] + 1.5
+                    self.cam_config["angley"]=(Centreproche[1]-self.cam_config["Screenmiddle"][1])*self.cam_config["RapportConvy"]  + 1.5
             
 
 
-            #Printing the angle of rotation (to centralize the camera on the face) 
-            print(Anglex,Angley)
             #Printing the number of face found
             print ("Found {0} faces!".format(len(faces)))
 
             self.cam_config["compteur"]+=1
+            ret,buffer=cv2.imencode('.jpg',frame)
+            frame=buffer.tobytes()
             self.sharedFrame.setFrame(frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
                 
-        # When everything done, release the capture
-        self.cap.release()
     def run(self) :
         self.Detection()
