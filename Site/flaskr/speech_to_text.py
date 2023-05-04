@@ -1,8 +1,8 @@
 import speech_recognition as sr
 import pyaudio
 import wave
-import math
-import unidecode
+# import math
+# import unidecode
 class SpeechRecognition:
 
     def __init__(self):
@@ -12,13 +12,12 @@ class SpeechRecognition:
         self.listTristesse = ["tristesse"]
 
 
-    def continuous_speech_to_text(self):
+    def continuous_speech_to_text(self, audio_bytes):
         # Create a recognizer object
         r = sr.Recognizer()
 
         # Use the default microphone as the audio source
-        with sr.Microphone() as source:
-
+        with sr.AudioFile(audio_bytes) as source:
             # Adjust for ambient noise
             r.adjust_for_ambient_noise(source)
 
@@ -35,6 +34,7 @@ class SpeechRecognition:
                 except sr.RequestError as e:
                     print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
+
     def analyze_text(self):
         if self.text != '':
             list = []
@@ -49,6 +49,8 @@ class SpeechRecognition:
                     self.play_motDoux("tristesse")
                 else:
                     pass
+        else:
+            pass
 
     def play_motDoux(self, emotion):
         # play the file selected
@@ -73,9 +75,9 @@ class SpeechRecognition:
         # return a file depending on the emotion entered
         #r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
         #return f"audio/{emotion}/{emotion}{r}.wav"
-        return f"audio/{emotion}/son440Hz.wav"
+        return f"../../son/audio/{emotion}/enregistrement.wav"
 
 
-if __name__ == "__main__":
-    a = SpeechRecognition()
-    a.continuous_speech_to_text()
+# if __name__ == "__main__":
+#     a = SpeechRecognition()
+#     a.continuous_speech_to_text()
