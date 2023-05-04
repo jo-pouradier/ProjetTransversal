@@ -1,4 +1,4 @@
-from flask import Flask,Response,render_template,request
+import flask
 import cv2,time
 import numpy as np
 import pyaudio
@@ -6,18 +6,43 @@ import keyboard
 import serial
 import keyboard 
 import obstacle as obs
+from flask_httpauth import HTTPBasicAuth
+import time
 #from scipy.signal import butter, lfilter
-
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
-ser.flushInput()
-ser.baudrate = 115200 #change this to your actual baud rate
+# ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+# ser.flushInput()
+# ser.baudrate = 115200 #change this to your actual baud rate
+
+#Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
+auth = HTTPBasicAuth()
+
+allowed_ips = ['134.214.51.113','192.168.56.1','192.168.202.1','182.168.252.154']#ip des appereils que l'on autorise à se connecter au serveur
+
+users = {
+	"optimus": "optimus",
+}
+
+@auth.verify_password
+def verify_password(username,password):
+    if username in users and users[username]==password:
+        return username
+
+
+def check_ip(f):
+    def wrapped(*args, **kwargs):
+        client_ip = flask.request.remote_addr
+        if client_ip not in allowed_ips:
+            flask.abort(403)  # Forbidden
+        return f(*args, **kwargs)
+    return wrapped
+
 
 
 #from scipy.signal import butter, lfilter
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 camera= cv2.VideoCapture(0)
 
@@ -184,12 +209,14 @@ def genHeader(sampleRate, bitsPerSample, channels):
 # --------------------------------------------------------------------------------------------
 # Routes
 @app.route('/index')
+@auth.login_required
+@check_ip
 def index():
-    return render_template('index.html')
+    return flask.render_template('index.html')
 
 @app.route("/livecam")
 def streamcam():
-    return Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return flask.Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
 def playSounds():
@@ -215,7 +242,7 @@ def playSounds():
            else:
                data = stream.read(CHUNK)
            yield(data)
-    return Response(sound())
+    return flask.Response(sound())
 
 
 
@@ -230,11 +257,16 @@ une fonction qui transmet en langage uart l'opération voulue
 # get_key = ""
 @app.route('/deplacements', methods=['POST'])
 def deplacements():
-    get_key = request.get_json(force=True)
+    get_key = flask.request.get_json(force=True)
     if get_key !=  CONFIG["last_get_key"] :
         print(get_key['key'])
         if  (get_key['key'] == 'z'):
             print("move forward")
+            n =100_000
+            start = time.perf_counter()
+            testFast(n)
+            end = time.perf_counter()
+            print(f'{end-start: .8f} seconds for {n} loops in testFast')
             ser.write(bytes("avancerR\r", 'utf8'))
         elif  (get_key['key'] == 'q'):
             print("turn left")
@@ -271,5 +303,20 @@ def stop() :
     ser.write(bytes("stop", 'utf8'))
     return""
 
-if __name__ == '__main__':
+@app.route('/protected')
+def protected_route():
+    return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
+
+def testFast(x):
+    y = 0
+    for i in range(0, x):
+        y *= i
+    return y
+
+
+
+def main():
     app.run(host='0.0.0.0', port=5001)
+
+if __name__ == '__main__':
+    main()
