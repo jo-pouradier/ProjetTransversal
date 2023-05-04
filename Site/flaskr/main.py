@@ -12,9 +12,9 @@ import time
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-# ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
-# ser.flushInput()
-# ser.baudrate = 115200 #change this to your actual baud rate
+ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200 #change this to your actual baud rate
 
 #Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
 auth = HTTPBasicAuth()
@@ -57,7 +57,19 @@ RECORD_SECONDS = 0
 CONFIG =  {
     "last_get_key":""
 }
-
+COMMANDES = {
+        'z' : 'avancerR\r',
+        'q' : 'gaucheR\r',
+        's' : 'arriereR\r',
+        'd' : 'droiteR\r',
+        ' ' : 'stopR\r',
+        'a' : 'auto\r',
+        'ArrowUp' : 'hautC\r',
+        'ArrowDown' : 'basC\r',
+        'ArrowLeft' : 'gaucheC\r',
+        'ArrowRight' : 'droiteC\r',
+        'Enter' : 'stopC\r',
+    }
  
 audio1 = pyaudio.PyAudio()
  
@@ -258,45 +270,41 @@ une fonction qui transmet en langage uart l'opération voulue
 @app.route('/deplacements', methods=['POST'])
 def deplacements():
     get_key = flask.request.get_json(force=True)
-    if get_key !=  CONFIG["last_get_key"] :
-        print(get_key['key'])
-        if  (get_key['key'] == 'z'):
-            print("move forward")
-            n =100_000
-            start = time.perf_counter()
-            testFast(n)
-            end = time.perf_counter()
-            print(f'{end-start: .8f} seconds for {n} loops in testFast')
-            ser.write(bytes("avancerR\r", 'utf8'))
-        elif  (get_key['key'] == 'q'):
-            print("turn left")
-            ser.write(bytes("gaucheR\r", 'utf8'))
-        elif  (get_key['key'] == 's'):
-            print("move back")
-            ser.write(bytes("arriereR\r", 'utf8'))
-        elif  (get_key['key'] == 'd'):
-            print("turn right")
-            ser.write(bytes("droiteR\r", 'utf8'))
-        elif (get_key['key'] == ' '):
-            print("stop")
-            ser.write(bytes("stop\r", 'utf8'))
-        elif (get_key['key'] == 'ArrowUp'):
-            print("camera up")
-            ser.write(bytes("hautC\r", 'utf8'))
-        elif (get_key['key'] == 'ArrowDown'):
-            print("camera down")
-            ser.write(bytes("basC\r", 'utf8'))
-        elif (get_key['key'] == 'ArrowLeft'):
-            print("camera left")
-            ser.write(bytes("gaucheC\r", 'utf8'))
-        elif (get_key['key'] == 'ArrowRight'):
-            print("camera right")
-            ser.write(bytes("droiteC\r", 'utf8'))
-        else : 
-            print("stop")
-            ser.write(bytes("stop\r", 'utf8'))
-    CONFIG["last_get_key"] = get_key
-    return""
+    # if get_key !=  CONFIG["last_get_key"] :
+        # print(get_key['key'])
+    # if  (get_key['key'] == 'z'):
+    #     print("move forward")
+    #     ser.write(bytes("avancerR\r", 'utf8'))
+    # elif  (get_key['key'] == 'q'):
+    #     print("turn left")
+    #     ser.write(bytes("gaucheR\r", 'utf8'))
+    # elif  (get_key['key'] == 's'):
+    #     print("move back")
+    #     ser.write(bytes("arriereR\r", 'utf8'))
+    # elif  (get_key['key'] == 'd'):
+    #     print("turn right")
+    #     ser.write(bytes("droiteR\r", 'utf8'))
+    # elif (get_key['key'] == ' '):
+    #     print("stop")
+    #     ser.write(bytes("stop\r", 'utf8'))
+    # elif (get_key['key'] == 'ArrowUp'):
+    #     print("camera up")
+    #     ser.write(bytes("hautC\r", 'utf8'))
+    # elif (get_key['key'] == 'ArrowDown'):
+    #     print("camera down")
+    #     ser.write(bytes("basC\r", 'utf8'))
+    # elif (get_key['key'] == 'ArrowLeft'):
+    #     print("camera left")
+    #     ser.write(bytes("gaucheC\r", 'utf8'))
+    # elif (get_key['key'] == 'ArrowRight'):
+    #     print("camera right")
+    #     ser.write(bytes("droiteC\r", 'utf8'))
+    # else : 
+    #     print("stop")
+    #     ser.write(bytes("stop\r", 'utf8'))
+    ser.write(bytes(get_key['key'], 'utf8'))
+    # CONFIG["last_get_key"] = get_key
+    return 200
 
 @app.route('/stop', methods=['POST'])
 def stop() :
