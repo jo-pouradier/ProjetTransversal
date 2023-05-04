@@ -13,7 +13,7 @@ class FlaskServer:
         #self.app.before_request(self.check_ip)
         self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
 
-        self.app.add_url_rule('/commandes', 'commandes',self.auth.login_required(self.commandes), methods=['POST'])
+        self.app.add_url_rule('/commandes', 'commandes',self.commandes, methods=['POST'])
         self.sharedFrame = sharedFrame
         self.sharedVariables = sharedVariables
 
