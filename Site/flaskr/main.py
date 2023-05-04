@@ -211,7 +211,7 @@ def playSounds():
            yield(data)
     
     a = stt.speechRecognition()
-    a.continuous_speech_to_text(Response(sound()))
+    a.continuous_speech_to_text(sound())
     return flask.Response(sound())
 
 
