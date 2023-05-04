@@ -300,7 +300,7 @@ def deplacements():
     #     ser.write(bytes("droiteC\r", 'utf8'))
     # else : 
     #     print("stop")
-    #     ser.write(bytes("stop\r", 'utf8'))
+    #      
 
     # gestion du mode automatique
     if get_key['key'] == 'a':

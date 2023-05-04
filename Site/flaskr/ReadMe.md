@@ -34,3 +34,8 @@ enfin on peut compiler avec la commande
 pyinstaller -F --hidden-import=flask --paths ./env/lib/python3.11/site-packages --add-data "./templates:./templates" --add-data "./static:./static" main.py
 ```
 
+# pour la suite 
+
+   <!-- <div>
+        <audio id="audio" controls src="{{ url_for('playSounds') }}" type="audio/x-wav;codec=pcm">test</audio>
+    </div> -->

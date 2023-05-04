@@ -12,6 +12,7 @@ class FlaskServer:
         # add decoration to check ip address with allowed_ips
         #self.app.before_request(self.check_ip)
         self.app.add_url_rule('/livecam', 'livecam', self.livecam)
+        self.sharedFrame = sharedFrame
 
       
 
@@ -31,8 +32,20 @@ class FlaskServer:
     
     def index(self):
         return render_template('index.html')
+    def genFrames(self):
+        while True:
+            frame = self.sharedFrame.getFrame()
+            # print(image is not None)
+            # get width and height of frame, where frame is bytes encoded image
+            if frame is not None:
+                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            else:
+                # generate empty frame
+                frame = b''
+                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
     def livecam(self):
-        return Response(self.cam.run(),mimetype='multipart/x-mixed-replace; boundary=frame')
+        return Response(self.genFrames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     def commandes(self):
         return self.commandes.run()
     

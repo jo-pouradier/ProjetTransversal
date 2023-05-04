@@ -4,7 +4,7 @@ from threadutils import ThreadSafeFrame, ThreadSafeDict
 import cv2
 import multiprocessing
 from flaskserver import FlaskServer
-#from cameraserver import CameraServer
+from CameraServer import CameraServer
 #from robotserver import RobotServer
 
 
