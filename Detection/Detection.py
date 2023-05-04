@@ -75,7 +75,7 @@ def Detection():
 
         #Printing the angle of rotation (to centralize the camera on the face) 
         print(Anglex,Angley)
-        #Printing the number of face found
+        #Printing the number of face
         print ("Found {0} faces!".format(len(faces)))
 
         compteur+=1
