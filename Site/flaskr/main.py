@@ -19,7 +19,7 @@ ser.baudrate = 115200 #change this to your actual baud rate
 #Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
 auth = HTTPBasicAuth()
 
-allowed_ips = ['134.214.51.113','192.168.56.1','192.168.202.1','182.168.252.254']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.113','192.168.56.1','192.168.202.1','192.168.252.254']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
 	"optimus": "optimus",
