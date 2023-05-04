@@ -65,7 +65,7 @@ def Detection():
                 Centreproche=(  (x+x+w)/2,(y+h+y)/2)
                 Anglex=(Centreproche[0]-Screenmiddle[0])*RapportConvx + 1.5
                 Angley=(Centreproche[1]-Screenmiddle[1])*RapportConvy  + 1.5
-            cv2.imshow("Faces found", frame)
+            # cv2.imshow("Faces found", frame)
         
 
 
