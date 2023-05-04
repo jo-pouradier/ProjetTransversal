@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
-
+import os
 class CameraServer() :
     def __init__(self,sharedVariables=None, sharedFrame=None):
         self.cap= cv2.VideoCapture(0)
         self.sharedFrame = sharedFrame
         self.sharedVariables = sharedVariables
+        self.front_face_path = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
         self.cam_config = {
             "compteur" : 0,
             "anglex" : 0,
@@ -13,7 +14,7 @@ class CameraServer() :
             "FPS" : 8,
             "WIDTH" : 320,
             "HEIGHT" : 240,
-            "faceCascade" : cv2.CascadeClassifier(r'Site\flaskr\haarcascade_frontalface_default.xml')
+            "faceCascade" : cv2.CascadeClassifier(self.front_face_path)
         }
 
         self.cam_config["Screenmiddle"] = (self.cam_config["WIDTH"]//2,self.cam_config["HEIGHT"]//2)
