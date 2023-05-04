@@ -20,18 +20,30 @@ ser.baudrate = 115200 #change this to your actual baud rate
 #Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
 auth = HTTPBasicAuth()
 
-allowed_ips = ['134.214.51.113','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
-	"optimus": "optimus",
+    "optimus": {
+        "password": "optimus",
+        "failed_attempts": 0,
+    },
 }
+MAX_LOGIN_ATTEMPTS = 3
+
 
 @auth.verify_password
-def verify_password(username,password):
-    if username in users and users[username]==password:
+def verify_password(username, password):
+    if username in users and users[username]["password"] == password:
+        users[username]["failed_attempts"] = 0  # reset failed attempts on successful login
         return username
-
-
+    elif username in users:
+        users[username]["failed_attempts"] += 1
+        if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
+            del users[username]  # block the user after max attempts
+        return None
+    else:
+        return None
+    
 def check_ip(f):
     def wrapped(*args, **kwargs):
         client_ip = flask.request.remote_addr
