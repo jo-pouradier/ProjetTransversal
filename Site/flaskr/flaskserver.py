@@ -19,7 +19,7 @@ class FlaskServer:
 
       
 
-        self.allowed_ips = ['127.0.0.1','134.214.51.113','192.168.56.1','192.168.202.1','182.168.252.154']#ip des appereils que l'on autorise à se connecter au serveur
+        self.allowed_ips = ['127.0.0.1','134.214.51.113','192.168.56.1','192.168.202.1','182.168.252.154','192.168.252.154']#ip des appereils que l'on autorise à se connecter au serveur
 
         self.users = {
             "optimus": "optimus",
