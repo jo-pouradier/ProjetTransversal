@@ -13,7 +13,7 @@ import speech_to_text as stt
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
-ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
 ser.flushInput()
 ser.baudrate = 115200 #change this to your actual baud rate
 
