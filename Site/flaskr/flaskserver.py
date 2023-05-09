@@ -70,7 +70,6 @@ class FlaskServer:
         return Response(self.genFrames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     def commandes(self):
         #put in the shared variable the command
-        print(self.sharedVariables)
         data = request.get_json(force=True)
         print(data["key"])
         if data['key'] in self.commandes.keys():
