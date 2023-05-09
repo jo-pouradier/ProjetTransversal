@@ -194,7 +194,7 @@ def detectionV3() :
             "compteur" : 0,
             "anglex" : 0,
             "angley" : 0,
-            "FPS" : 60,
+            "FPS" : 8,
             "WIDTH" : 5,
             "HEIGHT" : 5,
             "faceCascade" : cv2.CascadeClassifier(front_face_path)
