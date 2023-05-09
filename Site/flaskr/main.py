@@ -196,7 +196,7 @@ def index():
     return flask.render_template('index.html')
 
 @app.route("/livecam")
-def streamcam():
+def livecam():
     return flask.Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
