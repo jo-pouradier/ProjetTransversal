@@ -10,6 +10,7 @@ from flask_httpauth import HTTPBasicAuth
 import time
 import speech_to_text as stt
 import os
+import json
 #from scipy.signal import butter, lfilter
 
 
@@ -368,9 +369,9 @@ def deplacements():
 
     if get_key['key'] in COMMANDES.keys():
         ser.write(bytes(COMMANDES[get_key['key']], 'utf8'))
-        return 200
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     # CONFIG["last_get_key"] = get_key
-    return 400
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 @app.route('/stop', methods=['POST'])
 def stop() :
