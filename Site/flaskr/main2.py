@@ -48,8 +48,8 @@ def runCameraServer(sharedVariables, sharedFrame):
     cameraServer = CameraServer(sharedVariables, sharedFrame)
     cameraServer.run()
 
-def runRobotServer(config, sharedVariables, sharedFrame):
-    robotServer = RobotServer(config, sharedVariables, sharedFrame)
+def runRobotServer(sharedVariables, sharedFrame):
+    robotServer = RobotServer(sharedVariables, sharedFrame)
     robotServer.run()
 
 def runMicroServer(config, sharedVariables, sharedFrame):

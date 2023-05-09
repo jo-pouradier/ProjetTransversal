@@ -13,6 +13,8 @@ document.addEventListener('keydown', function(event) {
   var url = '/commandes';
   xhr.open("POST",url,true);
   xhr.setRequestHeader('Content-Type','application/json');
-  var send_data = {key:event.key};
+  var send_data = {};
+  send_data["key"] = event.key
+  console.log(send_data)
   xhr.send(JSON.stringify(send_data));
 });

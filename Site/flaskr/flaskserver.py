@@ -1,8 +1,13 @@
 from flask import Flask,request,abort,render_template,Response
 from flask_httpauth import HTTPBasicAuth
+import serial 
+
 
 class FlaskServer:
     def __init__(self,sharedVariables=None, sharedFrame=None) :
+        self.ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+        self.ser.flushInput()
+        self.ser.baudrate = 115200
         self.app = Flask(__name__)
         self.auth = HTTPBasicAuth()
         # add index page
@@ -11,11 +16,12 @@ class FlaskServer:
         self.auth.verify_password(self.verify_password)
         # add decoration to check ip address with allowed_ips
         #self.app.before_request(self.check_ip)
-        self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
-
-        self.app.add_url_rule('/commandes', 'commandes',self.commandes, methods=['POST'])
         self.sharedFrame = sharedFrame
         self.sharedVariables = sharedVariables
+        self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
+
+        self.app.add_url_rule('/commandes', 'commandes',self.auth.login_required(self.commandes), methods=['POST'])
+        
 
       
 
@@ -23,6 +29,18 @@ class FlaskServer:
 
         self.users = {
             "optimus": "optimus",
+        }
+        self.commandes = {
+        'z' : 'avancerR\r',
+        'q' : 'gaucheR\r',
+        's' : 'arriereR\r',
+        'd' : 'droiteR\r',
+        ' ' : 'stop\r',
+        'ArrowUp' : 'hautC\r',
+        'ArrowDown' : 'basC\r',
+        'ArrowLeft' : 'gaucheC\r',
+        'ArrowRight' : 'droiteC\r',
+        'Enter' : 'stop\r',
         }
 
     def verify_password(self, username, password):
@@ -50,7 +68,18 @@ class FlaskServer:
     def livecam(self):
         return Response(self.genFrames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     def commandes(self):
-        self.sharedVariables['commande'] = request.get_json(force=True)
+        #put in the shared variable the command
+        print(self.sharedVariables)
+        data = request.get_json(force=True)
+        print(data["key"])
+        if data['key'] in self.commandes.keys():
+            print(self.commandes[data['key']])
+            self.ser.write(bytes(self.commandes[data['key']], 'utf8'))
+            return 200
+        else : 
+            print("stop")
+            self.ser.write(bytes("stop\r", 'utf8'))
+            return 400
     def run(self):
         self.app.run(host="0.0.0.0", debug=False)
 
