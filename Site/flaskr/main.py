@@ -117,48 +117,99 @@ def detectionV2() :
     Returns: the camera frame with a rectangle around the face and numbers of face detected
     '''
     faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    camera.set(3,640) # set Width
-    camera.set(4,480) # set Height
-    cv2.setUseOptimized(True)
-    cv2.setNumThreads(1)
+    
+    compteur=0
+    Anglex=0
+    Angley=0
 
-    FPS = 30
-    timer = 1/FPS
 
-    prev_frame_time = 0
-    new_frame_time = 1
+    #Camera variables
+    FPS=30
+    WIDTH=320
+    HEIGHT=240
 
-    while True:
+    #Finding the middle of the screen
+    Screenmiddle=(WIDTH//2,HEIGHT//2)
+    #Conversion in degrees
+    RapportConvx= (2/WIDTH)
+    RapportConvy= (2/HEIGHT)
+
+
+    cap = cv2.VideoCapture(0)
+
+
+    #Implementing our parameters
+    ret = cap.set(cv2.CAP_PROP_FRAME_WIDTH,WIDTH) 
+    ret = cap.set(cv2.CAP_PROP_FRAME_HEIGHT,HEIGHT)
+    ret = cap.set(cv2.CAP_PROP_FPS,FPS)
+
+
+
+
+
+
+    while(True):
         
-        ret, img = camera.read()
-        # filp image horizontaly like mirror
-        img = cv2.flip(img, 1)
-        # waiting fps
-        if new_frame_time - prev_frame_time < timer:
-            time.sleep(timer - (new_frame_time - prev_frame_time))
 
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+        #Local variables
+        airemax=0
+        Centreproche=0
+        AxeX=0
+        AxeY=0
+
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        # Our operations on the frame come hereq
+        #alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)       
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Create the haar cascade
+        faceCascade = cv2.CascadeClassifier(r"Detection/Frontface.xml")
         # Detect faces in the image
-        faces = faceCascade.detectMultiScale(
-            gray,     
-            scaleFactor=1.2,
-            minNeighbors=5,     
-            minSize=(20, 20)
-        )
-        # Draw a rectangle around the faces
-        for (x,y,w,h) in faces:
-            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = img[y:y+h, x:x+w]  
-        
-        #text fps
-        #fps = 1/(new_frame_time-prev_frame_time)
-        prev_frame_time = new_frame_time
-        new_frame_time = time.perf_counter()
-        #cv2.putText(img, text=str(np.round(fps, 1)), org=(7, 70), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+        faces = faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30))
 
-        cv2.putText(img, text="nbr de face: " + str(len(faces)),org=(7, 70), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
-        ret,buffer=cv2.imencode('.jpg',img)
+        # Draw a rectangle around the faces
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+            #Calcul the area of the rectangle
+            airelocale=int(abs(x+w-x)*abs(y+h-y))
+            face_color = frame[y:y + h, x:x + w]
+            #Only keeping in memory the largest recangle
+            
+            
+            if airelocale>=airemax:
+                airemax=airelocale
+                #Converting the pixel-distance  pixel in angular distance for the servo motor
+                Centreproche=(  (x+x+w)/2,(y+h+y)/2)
+                Anglex=(Centreproche[0]-Screenmiddle[0])
+                Angley=(Centreproche[1]-Screenmiddle[1])
+                if Anglex>5:
+                    AxeX=-1
+                elif Anglex<-5:
+                    AxeX=1
+                if Angley>5:
+                    AxeY=-1
+                elif Angley<-5:
+                    AxeY=-1
+
+        
+
+
+        #Printing the angle of rotation (to centralize the camera on the face) 
+        # print(Anglex,Angley)
+        print(AxeX,AxeY)
+        #Printing the number of face
+        print ("Found {0} faces!".format(len(faces)))
+
+        compteur+=1
+
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+            
+        ret,buffer=cv2.imencode('.jpg',frame)
         frame=buffer.tobytes()
 
         yield(b'--frame\r\n'
