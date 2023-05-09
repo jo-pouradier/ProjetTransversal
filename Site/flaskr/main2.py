@@ -28,8 +28,8 @@ class App :
         self.cameraProcess.start()
         self.flaskProcess = multiprocessing.Process(target=runFlaskServer, args=(self.sharedVariables, self.sharedFrame))
         self.flaskProcess.start()
-        self.microProcess = multiprocessing.Process(target=runMicroServer, args=(self.sharedVariables, self.sharedFrame))
-        self.microProcess.start()
+        #self.microProcess = multiprocessing.Process(target=runMicroServer, args=(self.sharedVariables, self.sharedFrame))
+       # self.microProcess.start()
         #self.robotProcess = multiprocessing.Process(target=runRobotServer, args=(self.sharedVariables, self.sharedFrame))
         #self.robotProcess.start()
         #if (input("Press enter to stop\n") == 'n'):
