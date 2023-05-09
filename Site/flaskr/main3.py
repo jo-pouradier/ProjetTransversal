@@ -95,8 +95,8 @@ def detection() :
             "anglex" : 0,
             "angley" : 0,
             "FPS" : 8,
-            "WIDTH" : 100,
-            "HEIGHT" : 100,
+            "WIDTH" : 1,
+            "HEIGHT" : 1,
             "faceCascade" : cv2.CascadeClassifier(front_face_path)
         }
 
