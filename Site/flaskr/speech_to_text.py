@@ -78,6 +78,6 @@ class SpeechRecognition:
         return f"../../son/audio/{emotion}/{emotion}.wav"
 
 
-# if __name__ == "__main__":
-#     a = SpeechRecognition()
-#     a.continuous_speech_to_text()
+if __name__ == "__main__":
+    a = SpeechRecognition()
+    a.continuous_speech_to_text()

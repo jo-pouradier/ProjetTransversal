@@ -5,7 +5,7 @@ import serial
 
 class FlaskServer:
     def __init__(self,sharedVariables=None, sharedFrame=None) :
-        self.ser = serial.Serial('/dev/ttyUSB0')#change this to the name of your port
+        self.ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
         self.ser.flushInput()
         self.ser.baudrate = 115200
         self.app = Flask(__name__)
