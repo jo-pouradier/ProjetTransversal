@@ -18,3 +18,21 @@ document.addEventListener('keydown', function(event) {
   console.log(send_data)
   xhr.send(JSON.stringify(send_data));
 });
+
+function sound(){
+  var socket = io.connect('http://localhost:5000');
+
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function(stream) {
+        var mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = function(e) {
+            socket.emit('audio', e.data);
+        }
+    })
+    .catch(function(err) {
+        console.log('getUserMedia error: ' + err);
+    });
+
+}
