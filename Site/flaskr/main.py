@@ -326,7 +326,7 @@ une fonction qui transmet en langage uart l'opération voulue
 #Intialisation :
 # global get_key
 # get_key = ""
-@app.route('/deplacements', methods=['POST'])
+@app.route('/commandes', methods=['POST'])
 def deplacements():
     get_key = flask.request.get_json(force=True)
     # if get_key !=  CONFIG["last_get_key"] :
