@@ -46,9 +46,6 @@ class CameraServer() :
             self.sharedFrame.setFrame(frame)
 
     def Detection(self):
-        compteur = 0
-
-
         while True:
             #Local variables
             airemax=0
@@ -70,26 +67,25 @@ class CameraServer() :
                 minNeighbors=5,
                 minSize=(30, 30)
             )
-            compteur += 1
-            if compteur == 100:
-                compteur = 0            
-                # Draw a rectangle around the faces
-                for (x, y, w, h) in faces:
-                    
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
-                    #Calcul the area of the rectangle
-                    airelocale=int(abs(x+w-x)*abs(y+h-y))
-                    #Only keeping in memory the largest recangle
-                    
-                    
-                    if airelocale>=airemax:
-                        airemax=airelocale
-                        #Converting the pixel-distance  pixel in angular distance for the servo motor
-                        Centreproche=((x+x+w)/2,(y+h+y)/2)
-
-                        self.cam_config["anglex"]=(Centreproche[0]-self.cam_config["Screenmiddle"][0])*self.cam_config["RapportConvx"] + 1.5
-                        self.cam_config["angley"]=(Centreproche[1]-self.cam_config["Screenmiddle"][1])*self.cam_config["RapportConvy"]  + 1.5
+            
+            
+            # Draw a rectangle around the faces
+            for (x, y, w, h) in faces:
                 
+                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                #Calcul the area of the rectangle
+                airelocale=int(abs(x+w-x)*abs(y+h-y))
+                #Only keeping in memory the largest recangle
+                
+                
+                if airelocale>=airemax:
+                    airemax=airelocale
+                    #Converting the pixel-distance  pixel in angular distance for the servo motor
+                    Centreproche=((x+x+w)/2,(y+h+y)/2)
+
+                    self.cam_config["anglex"]=(Centreproche[0]-self.cam_config["Screenmiddle"][0])*self.cam_config["RapportConvx"] + 1.5
+                    self.cam_config["angley"]=(Centreproche[1]-self.cam_config["Screenmiddle"][1])*self.cam_config["RapportConvy"]  + 1.5
+            
 
 
             #Printing the number of face found
