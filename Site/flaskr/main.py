@@ -189,7 +189,6 @@ def genHeader(sampleRate, bitsPerSample, channels):
 
 
 def detectionV3() :
-        cap= cv2.VideoCapture(0)
         front_face_path = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
         cam_config = {
             "compteur" : 0,
@@ -206,9 +205,9 @@ def detectionV3() :
         cam_config["RapportConvy"] = (2/cam_config["HEIGHT"])
         
         #Implementing our parameters
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH,cam_config["WIDTH"]) 
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,cam_config["HEIGHT"])
-        cap.set(cv2.CAP_PROP_FPS,cam_config["FPS"])
+        camera.set(cv2.CAP_PROP_FRAME_WIDTH,cam_config["WIDTH"]) 
+        camera.set(cv2.CAP_PROP_FRAME_HEIGHT,cam_config["HEIGHT"])
+        camera.set(cv2.CAP_PROP_FPS,cam_config["FPS"])
 
         while True:
             #Local variables
@@ -217,7 +216,7 @@ def detectionV3() :
 
 
             # Capture frame-by-frame
-            ret, frame = cap.read()
+            ret, frame = camera.read()
             # Our operations on the frame come hereq
             #alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)       
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
