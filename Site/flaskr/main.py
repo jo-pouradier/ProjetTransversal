@@ -236,7 +236,7 @@ def detectionV3() :
             # Draw a rectangle around the faces
             for (x, y, w, h) in faces:
                 
-                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
                 #Calcul the area of the rectangle
                 airelocale=int(abs(x+w-x)*abs(y+h-y))
                 #Only keeping in memory the largest recangle
