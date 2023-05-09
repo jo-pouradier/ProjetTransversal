@@ -9,6 +9,7 @@ import obstacle as obs
 from flask_httpauth import HTTPBasicAuth
 import time
 import speech_to_text as stt
+import os
 #from scipy.signal import butter, lfilter
 
 
@@ -117,99 +118,48 @@ def detectionV2() :
     Returns: the camera frame with a rectangle around the face and numbers of face detected
     '''
     faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    
-    compteur=0
-    Anglex=0
-    Angley=0
+    camera.set(3,640) # set Width
+    camera.set(4,480) # set Height
+    cv2.setUseOptimized(True)
+    cv2.setNumThreads(1)
 
+    FPS = 30
+    timer = 1/FPS
 
-    #Camera variables
-    FPS=30
-    WIDTH=320
-    HEIGHT=240
+    prev_frame_time = 0
+    new_frame_time = 1
 
-    #Finding the middle of the screen
-    Screenmiddle=(WIDTH//2,HEIGHT//2)
-    #Conversion in degrees
-    RapportConvx= (2/WIDTH)
-    RapportConvy= (2/HEIGHT)
-
-
-    cap = cv2.VideoCapture(0)
-
-
-    #Implementing our parameters
-    ret = cap.set(cv2.CAP_PROP_FRAME_WIDTH,WIDTH) 
-    ret = cap.set(cv2.CAP_PROP_FRAME_HEIGHT,HEIGHT)
-    ret = cap.set(cv2.CAP_PROP_FPS,FPS)
-
-
-
-
-
-
-    while(True):
+    while True:
         
+        ret, img = camera.read()
+        # filp image horizontaly like mirror
+        img = cv2.flip(img, 1)
+        # waiting fps
+        if new_frame_time - prev_frame_time < timer:
+            time.sleep(timer - (new_frame_time - prev_frame_time))
 
-    
-        #Local variables
-        airemax=0
-        Centreproche=0
-        AxeX=0
-        AxeY=0
-
-        # Capture frame-by-frame
-        ret, frame = cap.read()
-        # Our operations on the frame come hereq
-        #alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)       
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        # Create the haar cascade
-        faceCascade = cv2.CascadeClassifier(r"Detection/Frontface.xml")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # Detect faces in the image
-        faces = faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30))
-
+        faces = faceCascade.detectMultiScale(
+            gray,     
+            scaleFactor=1.2,
+            minNeighbors=5,     
+            minSize=(20, 20)
+        )
         # Draw a rectangle around the faces
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
-            #Calcul the area of the rectangle
-            airelocale=int(abs(x+w-x)*abs(y+h-y))
-            face_color = frame[y:y + h, x:x + w]
-            #Only keeping in memory the largest recangle
-            
-            
-            if airelocale>=airemax:
-                airemax=airelocale
-                #Converting the pixel-distance  pixel in angular distance for the servo motor
-                Centreproche=(  (x+x+w)/2,(y+h+y)/2)
-                Anglex=(Centreproche[0]-Screenmiddle[0])
-                Angley=(Centreproche[1]-Screenmiddle[1])
-                if Anglex>5:
-                    AxeX=-1
-                elif Anglex<-5:
-                    AxeX=1
-                if Angley>5:
-                    AxeY=-1
-                elif Angley<-5:
-                    AxeY=-1
-
+        for (x,y,w,h) in faces:
+            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]  
         
+        #text fps
+        #fps = 1/(new_frame_time-prev_frame_time)
+        prev_frame_time = new_frame_time
+        new_frame_time = time.perf_counter()
+        #cv2.putText(img, text=str(np.round(fps, 1)), org=(7, 70), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
 
-
-        #Printing the angle of rotation (to centralize the camera on the face) 
-        # print(Anglex,Angley)
-        print(AxeX,AxeY)
-        #Printing the number of face
-        print ("Found {0} faces!".format(len(faces)))
-
-        compteur+=1
-
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-            
-        ret,buffer=cv2.imencode('.jpg',frame)
+        cv2.putText(img, text="nbr de face: " + str(len(faces)),org=(7, 70), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+        ret,buffer=cv2.imencode('.jpg',img)
         frame=buffer.tobytes()
 
         yield(b'--frame\r\n'
@@ -238,6 +188,95 @@ def genHeader(sampleRate, bitsPerSample, channels):
     return o
 
 
+def detectionV3() :
+        cap= cv2.VideoCapture(0)
+        sharedFrame = sharedFrame
+        sharedVariables = sharedVariables
+        front_face_path = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
+        cam_config = {
+            "compteur" : 0,
+            "anglex" : 0,
+            "angley" : 0,
+            "FPS" : 60,
+            "WIDTH" : 5,
+            "HEIGHT" : 5,
+            "faceCascade" : cv2.CascadeClassifier(front_face_path)
+        }
+
+        cam_config["Screenmiddle"] = (cam_config["WIDTH"]//2,cam_config["HEIGHT"]//2)
+        cam_config["RapportConvx"] = (2/cam_config["WIDTH"])
+        cam_config["RapportConvy"] = (2/cam_config["HEIGHT"])
+        
+        #Implementing our parameters
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH,cam_config["WIDTH"]) 
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,cam_config["HEIGHT"])
+        cap.set(cv2.CAP_PROP_FPS,cam_config["FPS"])
+
+        while True:
+            #Local variables
+            airemax=0
+            Centreproche=0
+
+
+            # Capture frame-by-frame
+            ret, frame = cap.read()
+            # Our operations on the frame come hereq
+            #alphachannel = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)       
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Create the haar cascade
+            
+            # Detect faces in the image
+            faces = cam_config["faceCascade"].detectMultiScale(
+                gray,
+                scaleFactor=1.1,
+                minNeighbors=5,
+                minSize=(30, 30)
+            )
+            
+            
+            # Draw a rectangle around the faces
+            for (x, y, w, h) in faces:
+                
+                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                #Calcul the area of the rectangle
+                airelocale=int(abs(x+w-x)*abs(y+h-y))
+                #Only keeping in memory the largest recangle
+                
+                
+                if airelocale>=airemax:
+                    airemax=airelocale
+                    #Converting the pixel-distance  pixel in angular distance for the servo motor
+                    Centreproche=((x+x+w)/2,(y+h+y)/2)
+
+                    cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])*cam_config["RapportConvx"] + 1.5
+                    cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])*cam_config["RapportConvy"]  + 1.5
+            
+
+
+            #Printing the number of face found
+            print ("Found {0} faces!".format(len(faces)))
+
+            cam_config["compteur"]+=1
+            ret,buffer=cv2.imencode('.jpg',frame)
+            frame=buffer.tobytes()
+            yield(b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+
+
+
+
+
+
+
+
+
+
+
+
 # --------------------------------------------------------------------------------------------
 # Routes
 @app.route('/index')
@@ -248,7 +287,7 @@ def index():
 
 @app.route("/livecam")
 def livecam():
-    return flask.Response(detectionV2(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return flask.Response(detectionV3(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/recordNplay")
 def playSounds():
