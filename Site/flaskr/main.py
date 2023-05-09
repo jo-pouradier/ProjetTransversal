@@ -22,7 +22,7 @@ import json
 #Sécurité: autorise seulement certaine IP + demande un identifiant et un mot de passe
 auth = HTTPBasicAuth()
 
-allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.254.154', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
     "optimus": {
