@@ -70,7 +70,7 @@ class CameraServer() :
                 minNeighbors=5,
                 minSize=(30, 30)
             )
-
+            compteur += 1
             if compteur == 100:
                 compteur = 0            
                 # Draw a rectangle around the faces
