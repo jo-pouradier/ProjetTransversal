@@ -39,7 +39,7 @@ def verify_password(username, password):
          users[username]["failed_attempts"] = 0  # reset failed attempts on successful login
          return username
      elif username in users:
-         usersi[username]["failed_attempts"] += 1
+         users[username]["failed_attempts"] += 1
          if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
              del users[username]  # block the user after max attempts
          return None
