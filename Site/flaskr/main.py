@@ -190,8 +190,6 @@ def genHeader(sampleRate, bitsPerSample, channels):
 
 def detectionV3() :
         cap= cv2.VideoCapture(0)
-        sharedFrame = sharedFrame
-        sharedVariables = sharedVariables
         front_face_path = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
         cam_config = {
             "compteur" : 0,
