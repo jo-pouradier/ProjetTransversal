@@ -11,9 +11,9 @@ class CameraServer() :
             "compteur" : 0,
             "anglex" : 0,
             "angley" : 0,
-            "FPS" : 8,
-            "WIDTH" : 320,
-            "HEIGHT" : 240,
+            "FPS" : 60,
+            "WIDTH" : 5,
+            "HEIGHT" : 5,
             "faceCascade" : cv2.CascadeClassifier(self.front_face_path)
         }
 
@@ -46,9 +46,6 @@ class CameraServer() :
             self.sharedFrame.setFrame(frame)
 
     def Detection(self):
-
-
-
         while True:
             #Local variables
             airemax=0
@@ -70,10 +67,12 @@ class CameraServer() :
                 minNeighbors=5,
                 minSize=(30, 30)
             )
-
+            
+            
             # Draw a rectangle around the faces
             for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                
+                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
                 #Calcul the area of the rectangle
                 airelocale=int(abs(x+w-x)*abs(y+h-y))
                 #Only keeping in memory the largest recangle

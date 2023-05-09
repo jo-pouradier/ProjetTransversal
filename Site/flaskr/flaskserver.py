@@ -1,6 +1,7 @@
 from flask import Flask,request,abort,render_template,Response
 from flask_httpauth import HTTPBasicAuth
 import serial 
+import json
 
 
 class FlaskServer:
@@ -69,17 +70,17 @@ class FlaskServer:
         return Response(self.genFrames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     def commandes(self):
         #put in the shared variable the command
-        print(self.sharedVariables)
         data = request.get_json(force=True)
         print(data["key"])
         if data['key'] in self.commandes.keys():
             print(self.commandes[data['key']])
             self.ser.write(bytes(self.commandes[data['key']], 'utf8'))
-            return 200
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+
         else : 
             print("stop")
             self.ser.write(bytes("stop\r", 'utf8'))
-            return 400
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     def run(self):
         self.app.run(host="0.0.0.0", debug=False)
 

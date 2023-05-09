@@ -11,7 +11,7 @@ def Detection():
 
 
     #Camera variables
-    FPS=8
+    FPS=30
     WIDTH=320
     HEIGHT=240
 
