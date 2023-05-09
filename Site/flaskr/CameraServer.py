@@ -12,8 +12,8 @@ class CameraServer() :
             "anglex" : 0,
             "angley" : 0,
             "FPS" : 8,
-            "WIDTH" : 50,
-            "HEIGHT" : 50,
+            "WIDTH" : 5,
+            "HEIGHT" : 5,
             "faceCascade" : cv2.CascadeClassifier(self.front_face_path)
         }
 
