@@ -31,26 +31,28 @@ users = {
 MAX_LOGIN_ATTEMPTS = 3
 
 
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and users[username]["password"] == password:
-        users[username]["failed_attempts"] = 0  # reset failed attempts on successful login
-        return username
-    elif username in users:
-        users[username]["failed_attempts"] += 1
-        if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
-            del users[username]  # block the user after max attempts
-        return None
-    else:
-        return None
+#@auth.verify_password
+###
+# def verify_password(username, password):
+#     if username in users and users[username]["password"] == password:
+#         users[username]["failed_attempts"] = 0  # reset failed attempts on successful login
+#         return username
+#     elif username in users:
+#         users[username]["failed_attempts"] += 1
+#         if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
+#             del users[username]  # block the user after max attempts
+#         return None
+#     else:
+#         return None
+
     
-def check_ip(f):
-    def wrapped(*args, **kwargs):
-        client_ip = flask.request.remote_addr
-        if client_ip not in allowed_ips:
-            flask.abort(403)  # Forbidden
-        return f(*args, **kwargs)
-    return wrapped
+# def check_ip(f):
+#     def wrapped(*args, **kwargs):
+#         client_ip = flask.request.remote_addr
+#         if client_ip not in allowed_ips:
+#             flask.abort(403)  # Forbidden
+#         return f(*args, **kwargs)
+#     return wrapped
 
 
 
@@ -188,8 +190,8 @@ def genHeader(sampleRate, bitsPerSample, channels):
 # --------------------------------------------------------------------------------------------
 # Routes
 @app.route('/index')
-@auth.login_required
-@check_ip
+#@auth.login_required
+#@check_ip
 def index():
     return flask.render_template('index.html')
 
