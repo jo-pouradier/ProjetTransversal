@@ -75,11 +75,9 @@ class FlaskServer:
         if data['key'] in self.commandes.keys():
             print(self.commandes[data['key']])
             self.ser.write(bytes(self.commandes[data['key']], 'utf8'))
-            return 200
         else : 
             print("stop")
             self.ser.write(bytes("stop\r", 'utf8'))
-            return 400
     def run(self):
         self.app.run(host="0.0.0.0", debug=False)
 

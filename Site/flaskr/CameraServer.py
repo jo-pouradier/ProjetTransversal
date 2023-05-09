@@ -101,4 +101,4 @@ class CameraServer() :
 
                 
     def run(self) :
-        self.Detection()
+        self.liveCam()
