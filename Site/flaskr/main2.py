@@ -6,7 +6,7 @@ import multiprocessing
 from flaskserver import FlaskServer
 from CameraServer import CameraServer
 from RobotServer import RobotServer
-from MicroServer import MicroServer
+#from MicroServer import MicroServer
 
 
 
