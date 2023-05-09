@@ -11,7 +11,7 @@ class CameraServer() :
             "compteur" : 0,
             "anglex" : 0,
             "angley" : 0,
-            "FPS" : 8,
+            "FPS" : 30,
             "WIDTH" : 5,
             "HEIGHT" : 5,
             "faceCascade" : cv2.CascadeClassifier(self.front_face_path)
@@ -101,4 +101,4 @@ class CameraServer() :
 
                 
     def run(self) :
-        self.Detection()
+        self.liveCam()
