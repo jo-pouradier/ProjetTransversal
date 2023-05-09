@@ -12,7 +12,7 @@ def obstacle():
         # print("test scan : " , scan)
         for i in range(len(scan)):
             if (scan[i][1]>=330 or scan[i][1]<=30):
-                if scan[i][2]<=1000:
+                if scan[i][2]<=2000:
                     flag=1
 
         print(flag)  

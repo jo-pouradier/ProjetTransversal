@@ -42,7 +42,8 @@ def Detection():
         #Local variables
         airemax=0
         Centreproche=0
-
+        AxeX=0
+        AxeY=0
 
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -68,14 +69,24 @@ def Detection():
                 airemax=airelocale
                 #Converting the pixel-distance  pixel in angular distance for the servo motor
                 Centreproche=(  (x+x+w)/2,(y+h+y)/2)
-                Anglex=(Centreproche[0]-Screenmiddle[0])*RapportConvx + 1.5
-                Angley=(Centreproche[1]-Screenmiddle[1])*RapportConvy  + 1.5
-            # cv2.imshow("Faces found", frame)
+                Anglex=(Centreproche[0]-Screenmiddle[0])
+                Angley=(Centreproche[1]-Screenmiddle[1])
+                if Anglex>5:
+                    AxeX=-1
+                elif Anglex<-5:
+                    AxeX=1
+                if Angley>5:
+                    AxeY=-1
+                elif Angley<-5:
+                    AxeY=-1
+
+        cv2.imshow("Faces found", frame)
         
 
 
         #Printing the angle of rotation (to centralize the camera on the face) 
-        print(Anglex,Angley)
+        # print(Anglex,Angley)
+        print(AxeX,AxeY)
         #Printing the number of face
         print ("Found {0} faces!".format(len(faces)))
 
