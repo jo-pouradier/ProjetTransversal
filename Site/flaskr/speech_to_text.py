@@ -1,6 +1,8 @@
 import speech_recognition as sr
 import pyaudio
 import wave
+
+
 # import math
 # import unidecode
 class SpeechRecognition:
@@ -10,7 +12,6 @@ class SpeechRecognition:
         self.listJoie = ["joie"]
         self.listColere = ["colère"]
         self.listTristesse = ["tristesse"]
-
 
     def continuous_speech_to_text(self, audio_bytes):
         # Create a recognizer object
@@ -33,7 +34,6 @@ class SpeechRecognition:
                     print("Could not understand audio")
                 except sr.RequestError as e:
                     print("Could not request results from Google Speech Recognition service; {0}".format(e))
-
 
     def analyze_text(self):
         if self.text != '':
@@ -70,14 +70,12 @@ class SpeechRecognition:
         stream.close()
         p.terminate()
 
-
     def select_motDoux(self, emotion):
         # return a file depending on the emotion entered
-        #r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
-        #return f"audio/{emotion}/{emotion}{r}.wav"
-        return f"../../son/audio/{emotion}/{emotion}.wav"
+        # r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
+        # return f"audio/{emotion}/{emotion}{r}.wav"
+        return f"../../son/audio/{emotion}/enregistrement.wav"
 
-
-if __name__ == "__main__":
-    a = SpeechRecognition()
-    a.continuous_speech_to_text()
+# if __name__ == "__main__":
+#     a = SpeechRecognition()
+#     a.continuous_speech_to_text()
