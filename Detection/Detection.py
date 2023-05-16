@@ -80,7 +80,7 @@ def Detection():
                 elif Angley<-5:
                     AxeY=-1
 
-        cv2.imshow("Faces found", frame)
+        #cv2.imshow("Faces found", frame)
         
 
 

@@ -1,6 +1,6 @@
 import flask
 import cv2
-import serial as ser
+import serial 
 from flask_httpauth import HTTPBasicAuth
 import os
 import json
@@ -17,6 +17,10 @@ auth = HTTPBasicAuth()
 
 camera= cv2.VideoCapture(0)
 
+ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200
+
 
 allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
 
@@ -28,7 +32,20 @@ users = {
 }
 MAX_LOGIN_ATTEMPTS = 3
 
-
+#Intialisation for keys:
+COMMANDES = {
+        'z' : 'avancerR\r',
+        'q' : 'gaucheR\r',
+        's' : 'arriereR\r',
+        'd' : 'droiteR\r',
+        ' ' : 'stop\r',
+        'ArrowUp' : 'hautC\r',
+        'ArrowDown' : 'basC\r',
+        'ArrowLeft' : 'gaucheC\r',
+        'ArrowRight' : 'droiteC\r',
+        'Enter' : 'stop\r',
+    }
+ 
 @auth.verify_password
 def verify_password(username, password):
      if username in users and users[username]["password"] == password:
@@ -54,20 +71,7 @@ def check_ip(f):
 
 
 
-#Intialisation for keys:
-COMMANDES = {
-        'z' : 'avancerR\r',
-        'q' : 'gaucheR\r',
-        's' : 'arriereR\r',
-        'd' : 'droiteR\r',
-        ' ' : 'stop\r',
-        'ArrowUp' : 'hautC\r',
-        'ArrowDown' : 'basC\r',
-        'ArrowLeft' : 'gaucheC\r',
-        'ArrowRight' : 'droiteC\r',
-        'Enter' : 'stop\r',
-    }
- 
+
 
 def liveCam() :
     '''Live camera feed
