@@ -182,7 +182,7 @@ def index():
 
 @app.route("/livecam")
 def livecam():
-    return flask.Response(liveCam(),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return flask.Response(detection(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 
