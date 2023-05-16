@@ -17,9 +17,9 @@ auth = HTTPBasicAuth()
 
 camera= cv2.VideoCapture(0)
 
-# ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
-# ser.flushInput()
-# ser.baudrate = 115200
+ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200
 
 
 allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
@@ -101,8 +101,8 @@ def detection() :
             "anglex" : 0,
             "angley" : 0,
             "FPS" : 8,
-            "WIDTH" : 100,
-            "HEIGHT" : 100,
+            "WIDTH" : 200,
+            "HEIGHT" : 200,
             "faceCascade" : cv2.CascadeClassifier(front_face_path)
         }
 
@@ -119,6 +119,8 @@ def detection() :
             #Local variables
             airemax=0
             Centreproche=0
+            AxeX=0
+            AxeY=0
 
 
             # Capture frame-by-frame
@@ -152,14 +154,33 @@ def detection() :
                     #Converting the pixel-distance  pixel in angular distance for the servo motor
                     Centreproche=((x+x+w)/2,(y+h+y)/2)
 
-                    cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])*cam_config["RapportConvx"] + 1.5
-                    cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])*cam_config["RapportConvy"]  + 1.5
-            
-
+                    cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])
+                    cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])
+                if cam_config["anglex"]>10:
+                    AxeX=-1
+                elif cam_config["anglex"]<-10:
+                    AxeX=1
+                if cam_config["angley"]>10:
+                    AxeY=1
+                elif cam_config["angley"]<-10:
+                    AxeY=-1
 
             #Printing the number of face found
             print ("Found {0} faces!".format(len(faces)))
 
+            if AxeX==1:
+                ser.write(bytes("droiteC\r",'utf8'))
+                print("droite")
+            elif AxeX==-1:
+                ser.write(bytes("gaucheC\r",'utf8'))   
+                print("gauche")      
+            if AxeY==1:
+                ser.write(bytes("hautC\r",'utf8'))
+                print("haut")
+            elif AxeY==-1:
+                ser.write(bytes("basC\r",'utf8'))
+                print("bas")
+    
             cam_config["compteur"]+=1
             frame_resize = imutils.resize(frame , height=200)
             frame_resize = imutils.resize(frame , width=200)
