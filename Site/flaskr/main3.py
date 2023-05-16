@@ -22,7 +22,7 @@ ser.flushInput()
 ser.baudrate = 115200
 
 
-allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
     "optimus": {
@@ -201,7 +201,7 @@ def protected_route():
 
 
 def main():
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
 
 if __name__ == '__main__':
     main()

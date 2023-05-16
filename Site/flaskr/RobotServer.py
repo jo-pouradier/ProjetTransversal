@@ -18,9 +18,7 @@ class RobotServer:
         self.sharedVariables = sharedVariables
 
     def send_commands(self):
-        print(self.sharedVariables)
-        if self.sharedVariables['commande'] in self.commandes.keys():
-            print(self.commandes[self.sharedVariables['commande']['key']])
+        if self.sharedVariables['commande']['key'] in self.commandes.keys():
             ser.write(bytes(self.commandes[self.sharedVariables['commande']['key']], 'utf8'))
             return 200
         else:
