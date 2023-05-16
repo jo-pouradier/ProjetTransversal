@@ -4,7 +4,6 @@ import serial
 from flask_httpauth import HTTPBasicAuth
 import os
 import json
-import base64
 import imutils
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
