@@ -175,11 +175,11 @@ def detection() :
                 ser.write(bytes("gaucheC\r",'utf8'))   
                 print("gauche")      
             if AxeY==1:
-                ser.write(bytes("hautC\r",'utf8'))
-                print("haut")
-            elif AxeY==-1:
                 ser.write(bytes("basC\r",'utf8'))
                 print("bas")
+            elif AxeY==-1:
+                ser.write(bytes("hautC\r",'utf8'))
+                print("haut")
     
             cam_config["compteur"]+=1
             frame_resize = imutils.resize(frame , height=200)
