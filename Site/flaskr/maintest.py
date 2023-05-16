@@ -101,8 +101,8 @@ def detection() :
             "anglex" : 0,
             "angley" : 0,
             "FPS" : 8,
-            "WIDTH" : 1,
-            "HEIGHT" : 1,
+            "WIDTH" : 100,
+            "HEIGHT" : 100,
             "faceCascade" : cv2.CascadeClassifier(front_face_path)
         }
 
@@ -161,8 +161,8 @@ def detection() :
             print ("Found {0} faces!".format(len(faces)))
 
             cam_config["compteur"]+=1
-            frame_resize = imutils.resize(frame , height=200)
-            frame_resize = imutils.resize(frame , width=200)
+            frame_resize = imutils.resize(frame , height=100)
+            frame_resize = imutils.resize(frame , width=100)
             ret,buffer=cv2.imencode('.jpg',frame_resize)
             frame=buffer.tobytes()
             yield(b'--frame\r\n'
