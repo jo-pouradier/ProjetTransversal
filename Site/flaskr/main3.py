@@ -22,7 +22,7 @@ ser.flushInput()
 ser.baudrate = 115200
 
 
-allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.113','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
     "optimus": {
@@ -55,6 +55,7 @@ def verify_password(username, password):
          users[username]["failed_attempts"] += 1
          if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
              del users[username]  # block the user after max attempts
+             return "blocked"
          return None
      else:
          return None
@@ -170,11 +171,26 @@ def detection() :
 
 # --------------------------------------------------------------------------------------------
 # Routes
-@app.route('/')
-@auth.login_required
 @check_ip
-def index():
-    return flask.render_template('index.html')
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'POST':
+        username = flask.request.form['username']
+        password = flask.request.form['password']
+        result = verify_password(username, password)
+        if result == "blocked":
+            return flask.render_template('login.html', error="Too many failed login attempts. You are blocked.")
+        elif result:
+            return flask.render_template('index.html')
+        else:
+            if username in users:
+                failed_attempts = users[username]["failed_attempts"]
+                if failed_attempts >= MAX_LOGIN_ATTEMPTS - 1:
+                    return flask.render_template('login.html', error="Invalid username or password. This is your last attempt.")
+            return flask.render_template('login.html', error="Invalid username or password")
+    return flask.render_template('login.html')
+
+
 
 @app.route("/livecam")
 def livecam():
