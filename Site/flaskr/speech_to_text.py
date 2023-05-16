@@ -75,7 +75,9 @@ class SpeechRecognition:
         # return a file depending on the emotion entered
         #r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
         #return f"audio/{emotion}/{emotion}{r}.wav"
+        print(f"../../son/audio/{emotion}/{emotion}.wav")
         return f"../../son/audio/{emotion}/{emotion}.wav"
+    
 
 
 if __name__ == "__main__":
