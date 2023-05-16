@@ -161,8 +161,8 @@ def detection() :
             print ("Found {0} faces!".format(len(faces)))
 
             cam_config["compteur"]+=1
-            frame_resize = imutils.resize(frame , height=100)
-            frame_resize = imutils.resize(frame , width=100)
+            frame_resize = imutils.resize(frame , height=2)
+            frame_resize = imutils.resize(frame , width=2)
             ret,buffer=cv2.imencode('.jpg',frame_resize)
             frame=buffer.tobytes()
             yield(b'--frame\r\n'
