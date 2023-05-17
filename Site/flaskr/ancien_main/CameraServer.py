@@ -9,13 +9,13 @@ class CameraServer:
         self.sharedVariables = sharedVariables
         self.front_face_path = os.path.join(os.path.dirname(__file__), 'haarcascade_frontalface_default.xml')
         self.cam_config = {
-            "compteur" : 0,
-            "anglex" : 0,
-            "angley" : 0,
-            "FPS" : 60,
-            "WIDTH" : 5,
-            "HEIGHT" : 5,
-            "faceCascade" : cv2.CascadeClassifier(self.front_face_path)
+            "compteur": 0,
+            "anglex": 0,
+            "angley": 0,
+            "FPS": 60,
+            "WIDTH": 5,
+            "HEIGHT": 5,
+            "faceCascade": cv2.CascadeClassifier(self.front_face_path)
         }
 
         self.cam_config["Screenmiddle"] = (self.cam_config["WIDTH"] // 2, self.cam_config["HEIGHT"] // 2)
@@ -67,21 +67,19 @@ class CameraServer:
                 minNeighbors=5,
                 minSize=(30, 30)
             )
-            
-            
+
             # Draw a rectangle around the faces
             for (x, y, w, h) in faces:
-                
-                #cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
-                #Calcul the area of the rectangle
-                airelocale=int(abs(x+w-x)*abs(y+h-y))
-                #Only keeping in memory the largest recangle
-                
-                
-                if airelocale>=airemax:
-                    airemax=airelocale
-                    #Converting the pixel-distance  pixel in angular distance for the servo motor
-                    Centreproche=((x+x+w)/2,(y+h+y)/2)
+
+                # cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                # Calcul the area of the rectangle
+                airelocale = int(abs(x + w - x) * abs(y + h - y))
+                # Only keeping in memory the largest rectangle
+
+                if airelocale >= airemax:
+                    airemax = airelocale
+                    # Converting the pixel-distance  pixel in angular distance for the servo motor
+                    Centreproche = ((x + x + w) / 2, (y + h + y) / 2)
 
                 if airelocale >= airemax:
                     airemax = airelocale

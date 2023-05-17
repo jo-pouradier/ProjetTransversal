@@ -1,12 +1,11 @@
 from flask import Flask, request, abort, render_template, Response
 from flask_httpauth import HTTPBasicAuth
-import serial 
+import serial
 import json
 
 
-
 class FlaskServer:
-    def __init__(self,sharedVariables=None, sharedFrame=None) :
+    def __init__(self, sharedVariables=None, sharedFrame=None):
         # self.ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
         # self.ser.flushInput()
         # self.ser.baudrate = 115200
@@ -17,13 +16,12 @@ class FlaskServer:
         # add decoration to check auth
         self.auth.verify_password(self.verify_password)
         # add decoration to check ip address with allowed_ips
-        #self.app.before_request(self.check_ip)
+        # self.app.before_request(self.check_ip)
         self.sharedFrame = sharedFrame
         self.sharedVariables = sharedVariables
-        self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
+        self.app.add_url_rule('/livecam', 'livecam', self.auth.login_required(self.livecam))
 
-        self.app.add_url_rule('/commandes', 'commandes',self.auth.login_required(self.commandes), methods=['POST'])
-        
+        self.app.add_url_rule('/commandes', 'commandes', self.auth.login_required(self.commandes), methods=['POST'])
 
         self.allowed_ips = ['127.0.0.1', '134.214.51.113', '192.168.56.1', '192.168.202.1', '182.168.252.154',
                             '192.168.252.154']  # ip des apparels que l'on autorise à se connecter au serveur
@@ -32,16 +30,16 @@ class FlaskServer:
             "optimus": "optimus",
         }
         self.commandes = {
-        'z' : 'avancerR\r',
-        'q' : 'gaucheR\r',
-        's' : 'arriereR\r',
-        'd' : 'droiteR\r',
-        ' ' : 'stop\r',
-        'ArrowUp' : 'hautC\r',
-        'ArrowDown' : 'basC\r',
-        'ArrowLeft' : 'gaucheC\r',
-        'ArrowRight' : 'droiteC\r',
-        'Enter' : 'stop\r',
+            'z': 'avancerR\r',
+            'q': 'gaucheR\r',
+            's': 'arriereR\r',
+            'd': 'droiteR\r',
+            ' ': 'stop\r',
+            'ArrowUp': 'hautC\r',
+            'ArrowDown': 'basC\r',
+            'ArrowLeft': 'gaucheC\r',
+            'ArrowRight': 'droiteC\r',
+            'Enter': 'stop\r',
         }
 
     def verify_password(self, username, password):
@@ -71,18 +69,18 @@ class FlaskServer:
         return Response(self.genFrames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     def commandes(self):
-        #put in the shared variable the command
+        # put in the shared variable the command
         data = request.get_json(force=True)
         print(data["key"])
         if data['key'] in self.commandes.keys():
             print(self.commandes[data['key']])
             self.ser.write(bytes(self.commandes[data['key']], 'utf8'))
-            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
-        else : 
+        else:
             print("stop")
             self.ser.write(bytes("stop\r", 'utf8'))
-            return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
     def run(self):
         self.app.run(host="0.0.0.0", port=5001, debug=False)
