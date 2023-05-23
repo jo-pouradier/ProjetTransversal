@@ -220,8 +220,7 @@ def protected_route():
 
 @app.route('/audio_stream')
 def audio_stream():
-    return flask.Response(rec_sound(), mimetype='audio/x-wav')
-        
+    return flask.render_template('index.html',file='../../son/audio/joie/joie.wav')        
 
 
 def main():

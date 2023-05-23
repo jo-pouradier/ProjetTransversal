@@ -69,7 +69,8 @@ class FlaskServer:
             data = stream.read(CHUNK_SIZE)
             yield(data)
 
-
+    def audio_stream(self):
+        return Response(self.rec_sound(), mimetype="audio/x-wav")
 
     def genFrames(self):
         while True:
