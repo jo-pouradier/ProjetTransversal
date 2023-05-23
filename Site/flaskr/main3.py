@@ -20,9 +20,9 @@ auth = HTTPBasicAuth()
 
 camera= cv2.VideoCapture(0)
 
-ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
-ser.flushInput()
-ser.baudrate = 115200
+#ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
+#ser.flushInput()
+#ser.baudrate = 115200
 
 
 allowed_ips = ['134.214.51.113','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
@@ -171,6 +171,19 @@ def detection() :
                 break
 
 
+def rec_sound():
+        CHUNK_SIZE = 1024
+        FORMAT = pyaudio.paInt16
+        ## Adaptez ces paramètres 
+        CHANNELS = 1
+        RATE = 44100
+        
+        p = pyaudio.PyAudio()
+        stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+        while True:
+            data = stream.read(CHUNK_SIZE)
+            yield(data)
+
 
 # --------------------------------------------------------------------------------------------
 # Routes
@@ -218,10 +231,23 @@ def protected_route():
     return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
 
 
+def rec_sound():
+    CHUNK_SIZE = 1024
+    FORMAT = pyaudio.paInt16
+    ## Adaptez ces paramètres 
+    CHANNELS = 1
+    RATE = 44100
+        
+    p = pyaudio.PyAudio()
+    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+    while True:
+        data = stream.read(CHUNK_SIZE)
+        yield(data)
+
+
 @app.route('/audio_stream')
 def audio_stream():
-    return flask.render_template('index.html',file='../../son/audio/joie/joie.wav')        
-
+    return flask.Response(rec_sound(),mimetype='audio/x-wav')
 
 def main():
     app.run(host='0.0.0.0', port=5001)
