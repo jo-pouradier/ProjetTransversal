@@ -194,24 +194,6 @@ def login():
     return flask.render_template('login.html')
 
 
-
-
-CHUNK_SIZE = 1024
-FORMAT = pyaudio.paInt16
-## Adaptez ces paramètres 
-CHANNELS = 1
-RATE = 44100
-high_cutoff = 1000
-low_cutoff = 200
-
-def rec_sound():
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
-    while True:
-        data = stream.read(CHUNK_SIZE)
-        yield(data)
-
-
 @app.route("/livecam")
 def livecam():
     return flask.Response(detection(),mimetype='multipart/x-mixed-replace; boundary=frame')
