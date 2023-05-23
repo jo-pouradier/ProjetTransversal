@@ -20,9 +20,9 @@ auth = HTTPBasicAuth()
 
 camera= cv2.VideoCapture(0)
 
-#ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
-#ser.flushInput()
-#ser.baudrate = 115200
+ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
+ser.flushInput()
+ser.baudrate = 115200
 
 
 allowed_ips = ['134.214.51.113','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
