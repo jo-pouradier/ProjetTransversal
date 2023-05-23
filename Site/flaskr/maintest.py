@@ -156,14 +156,18 @@ def detection() :
 
                     cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])
                     cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])
-                if cam_config["anglex"]>10:
-                    AxeX=-1
-                elif cam_config["anglex"]<-10:
-                    AxeX=1
-                if cam_config["angley"]>5:
-                    AxeY=1
-                elif cam_config["angley"]<-5:
-                    AxeY=-1
+                
+                
+                if (Centreproche[0]>20 and CentreProche[0]<cam_config["WIDTH"]-20):
+                    if cam_config["anglex"]>10:
+                        AxeX=-1
+                    elif cam_config["anglex"]<-10:
+                        AxeX=1
+                if (Centreproche[1]>20 and CentreProche[1]<cam_config["HEIGHT"]-20):
+                    if cam_config["angley"]>5:
+                        AxeY=1
+                    elif cam_config["angley"]<-5:
+                        AxeY=-1
 
             #Printing the number of face found
             print ("Found {0} faces!".format(len(faces)))
