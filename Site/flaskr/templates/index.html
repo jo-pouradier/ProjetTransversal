@@ -25,9 +25,13 @@
     <h1 id="titre">Tableau de contrôle</h1>
      
     </div>
+    TEST  
     <div>
-        <img id="cam" src="{{ url_for('livecam') }}" />
-    </div>
+      <audio controls><source id="audio" src="{{ url_for('audio_stream') }}" type="audio/x-wav;codec=pcm"> TEST</audio>
+  </div>    
+  <div>
+    <img id="cam" src="{{ url_for('livecam') }}" />
+  </div>
     </body>
 
 
