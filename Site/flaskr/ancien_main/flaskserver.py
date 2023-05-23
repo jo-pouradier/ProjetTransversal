@@ -23,7 +23,8 @@ class FlaskServer:
         self.app.add_url_rule('/livecam', 'livecam',self.auth.login_required(self.livecam))
 
         self.app.add_url_rule('/commandes', 'commandes',self.auth.login_required(self.commandes), methods=['POST'])
-        
+    
+        self.app.add_url_rule('/audio_stream', 'audio_stream',self.auth.login_required(self.audio_stream), methods=['GET'])
 
         self.allowed_ips = ['127.0.0.1', '134.214.51.113', '192.168.56.1', '192.168.202.1', '182.168.252.154',
                             '192.168.252.154']  # ip des apparels que l'on autorise à se connecter au serveur

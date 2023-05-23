@@ -23,7 +23,11 @@
     <div>
     <div id="OpenNav" onclick="openNav()">&#9776;</div>
     <h1 id="titre">Tableau de contrôle</h1>
-     
+    
+    <audio controls id="audio_player">
+        <source src="{{file}}" type="audio/x-wav" id="audio_source">
+    </audio>
+
     </div>
     <div>
         <img id="cam" src="{{ url_for('livecam') }}" />

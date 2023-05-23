@@ -4,7 +4,10 @@ import serial as ser
 from flask_httpauth import HTTPBasicAuth
 import os
 import json
-
+import speech_to_text 
+import requests
+import time
+import pyaudio
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
 #ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
@@ -172,10 +175,26 @@ def detection() :
 def index():
     return flask.render_template('index.html')
 
+
+CHUNK_SIZE = 1024
+FORMAT = pyaudio.paInt16
+## Adaptez ces paramètres 
+CHANNELS = 1
+RATE = 44100
+high_cutoff = 1000
+low_cutoff = 200
+
+def rec_sound():
+    p = pyaudio.PyAudio()
+    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+    while True:
+        data = stream.read(CHUNK_SIZE)
+        yield(data)
+
+
 @app.route("/livecam")
 def livecam():
     return flask.Response(detection(),mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 
 @app.route('/commandes', methods=['POST'])
@@ -191,9 +210,16 @@ def deplacements():
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
+
 @app.route('/protected')
 def protected_route():
     return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
+
+
+@app.route('/audio_stream')
+def audio_stream():
+    return flask.Response(rec_sound(), mimetype='audio/x-wav')
+        
 
 
 def main():

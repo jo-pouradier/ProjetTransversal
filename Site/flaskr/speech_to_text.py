@@ -42,11 +42,11 @@ class SpeechRecognition:
             for i in list:
                 print(i)
                 if i in self.listJoie:
-                    self.play_motDoux("joie")
+                    return self.play_motDoux("joie")
                 elif i in self.listColere:
-                    self.play_motDoux("colere")
+                    return self.play_motDoux("colere")
                 elif i in self.listTristesse:
-                    self.play_motDoux("tristesse")
+                    return self.play_motDoux("tristesse")
                 else:
                     pass
         else:
@@ -55,6 +55,7 @@ class SpeechRecognition:
     def play_motDoux(self, emotion):
         # play the file selected
         file = self.select_motDoux(emotion)
+        return file
         chunk = 1024
         wf = wave.open(file, 'rb')
         p = pyaudio.PyAudio()
