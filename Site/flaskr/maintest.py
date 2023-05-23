@@ -160,9 +160,9 @@ def detection() :
                     AxeX=-1
                 elif cam_config["anglex"]<-10:
                     AxeX=1
-                if cam_config["angley"]>10:
+                if cam_config["angley"]>5:
                     AxeY=1
-                elif cam_config["angley"]<-10:
+                elif cam_config["angley"]<-5:
                     AxeY=-1
 
             #Printing the number of face found
