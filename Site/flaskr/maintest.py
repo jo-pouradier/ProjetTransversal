@@ -4,10 +4,7 @@ import serial
 from flask_httpauth import HTTPBasicAuth
 import os
 import json
-import speech_to_text 
-import requests
-import time
-import pyaudio
+import imutils
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
 #ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
@@ -25,7 +22,7 @@ ser.flushInput()
 ser.baudrate = 115200
 
 
-allowed_ips = ['134.214.51.113','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
+allowed_ips = ['134.214.51.152','134.214.51.81','192.168.56.1','192.168.202.1','192.168.252.254', '192.168.252.187','192.168.252.154', '192.168.252.32', '127.0.0.1']#ip des appereils que l'on autorise à se connecter au serveur
 
 users = {
     "optimus": {
@@ -58,7 +55,6 @@ def verify_password(username, password):
          users[username]["failed_attempts"] += 1
          if users[username]["failed_attempts"] >= MAX_LOGIN_ATTEMPTS:
              del users[username]  # block the user after max attempts
-             return "blocked"
          return None
      else:
          return None
@@ -89,7 +85,9 @@ def liveCam() :
         if not success:
             break
         else:
-            ret,buffer=cv2.imencode('.jpg',frame)
+            frame_resize = imutils.resize(frame , height=200)
+            frame_resize = imutils.resize(frame , width=200)
+            ret,buffer=cv2.imencode('.jpg',frame_resize)
             frame=buffer.tobytes()
 
         yield(b'--frame\r\n'
@@ -103,8 +101,8 @@ def detection() :
             "anglex" : 0,
             "angley" : 0,
             "FPS" : 8,
-            "WIDTH" : 1,
-            "HEIGHT" : 1,
+            "WIDTH" : 200,
+            "HEIGHT" : 200,
             "faceCascade" : cv2.CascadeClassifier(front_face_path)
         }
 
@@ -121,6 +119,8 @@ def detection() :
             #Local variables
             airemax=0
             Centreproche=0
+            AxeX=0
+            AxeY=0
 
 
             # Capture frame-by-frame
@@ -154,16 +154,37 @@ def detection() :
                     #Converting the pixel-distance  pixel in angular distance for the servo motor
                     Centreproche=((x+x+w)/2,(y+h+y)/2)
 
-                    cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])*cam_config["RapportConvx"] + 1.5
-                    cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])*cam_config["RapportConvy"]  + 1.5
-            
-
+                    cam_config["anglex"]=(Centreproche[0]-cam_config["Screenmiddle"][0])
+                    cam_config["angley"]=(Centreproche[1]-cam_config["Screenmiddle"][1])
+                if cam_config["anglex"]>10:
+                    AxeX=-1
+                elif cam_config["anglex"]<-10:
+                    AxeX=1
+                if cam_config["angley"]>10:
+                    AxeY=1
+                elif cam_config["angley"]<-10:
+                    AxeY=-1
 
             #Printing the number of face found
             print ("Found {0} faces!".format(len(faces)))
 
+            if AxeX==1:
+                ser.write(bytes("droiteC\r",'utf8'))
+                print("droite")
+            elif AxeX==-1:
+                ser.write(bytes("gaucheC\r",'utf8'))   
+                print("gauche")      
+            if AxeY==1:
+                ser.write(bytes("basC\r",'utf8'))
+                print("bas")
+            elif AxeY==-1:
+                ser.write(bytes("hautC\r",'utf8'))
+                print("haut")
+    
             cam_config["compteur"]+=1
-            ret,buffer=cv2.imencode('.jpg',frame)
+            frame_resize = imutils.resize(frame , height=200)
+            frame_resize = imutils.resize(frame , width=200)
+            ret,buffer=cv2.imencode('.jpg',frame_resize)
             frame=buffer.tobytes()
             yield(b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -174,47 +195,16 @@ def detection() :
 
 # --------------------------------------------------------------------------------------------
 # Routes
-@check_ip
-@app.route('/', methods=['GET', 'POST'])
-def login():
-    if flask.request.method == 'POST':
-        username = flask.request.form['username']
-        password = flask.request.form['password']
-        result = verify_password(username, password)
-        if result == "blocked":
-            return flask.render_template('login.html', error="Too many failed login attempts. You are blocked.")
-        elif result:
-            return flask.render_template('index.html')
-        else:
-            if username in users:
-                failed_attempts = users[username]["failed_attempts"]
-                if failed_attempts >= MAX_LOGIN_ATTEMPTS - 1:
-                    return flask.render_template('login.html', error="Invalid username or password. This is your last attempt.")
-            return flask.render_template('login.html', error="Invalid username or password")
-    return flask.render_template('login.html')
-
-
-
-
-CHUNK_SIZE = 1024
-FORMAT = pyaudio.paInt16
-## Adaptez ces paramètres 
-CHANNELS = 1
-RATE = 44100
-high_cutoff = 1000
-low_cutoff = 200
-
-def rec_sound():
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
-    while True:
-        data = stream.read(CHUNK_SIZE)
-        yield(data)
-
+@app.route('/')
+@auth.login_required
+#  @check_ip
+def index():
+    return flask.render_template('index.html')
 
 @app.route("/livecam")
 def livecam():
     return flask.Response(detection(),mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 
 @app.route('/commandes', methods=['POST'])
@@ -230,16 +220,9 @@ def deplacements():
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
-
 @app.route('/protected')
 def protected_route():
     return  "Vous êtes connecté en tant que : {} et votre adresse IP est autorisée.".format(auth.current_user())
-
-
-@app.route('/audio_stream')
-def audio_stream():
-    return flask.Response(rec_sound(), mimetype='audio/x-wav')
-        
 
 
 def main():
