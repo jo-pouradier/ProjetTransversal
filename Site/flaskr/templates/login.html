@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
     <title>Login</title>
     <script>
         var usernameValid = false;
+        
 
 
         function checkUsername(event) {
@@ -46,6 +48,14 @@
             }
         }
 
+        function simulateEnterKey() {
+            var event = new KeyboardEvent("keydown", {
+                keyCode: 13,
+                bubbles: true,
+                cancelable: true
+            });
+            document.getElementById("username").dispatchEvent(event);
+        }
 
         // Désactive la saisie de l'identifiant si le champ est déjà valide
         window.onload = function() {
@@ -56,10 +66,11 @@
         };
     </script>
 </head>
-<body>
-    <h1>Login</h1>
+<body class="center-content">
+    <h1>Bienvenue sur notre site!</h1>
+    <p class="connexion-text">Connexion</p>
     {% if error %}
-    <p>{{ error }}</p>
+    <p class="error-message">{{ error }}</p>
     {% endif %}
     <form method="post" action="/">
         <label for="username">Username:</label>
@@ -70,7 +81,7 @@
             <input type="password" id="password" name="password">
             <br>
         </div>
-        <input type="button" value="Submit" onclick="checkUsername(event)">
+        <input type="button" value="Submit" class="custom-button" onclick="simulateEnterKey();"  >
         <input type="submit" value="Login" style="display: none;">
     </form>
 </body>
