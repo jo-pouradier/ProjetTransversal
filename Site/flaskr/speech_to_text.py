@@ -54,7 +54,7 @@ class SpeechRecognition:
 
     def play_motDoux(self, emotion):
         # play the file selected
-        file = self.select_motDoux(emotion)
+        file = "son/{emotion}2.wav"
         chunk = 1024
         wf = wave.open(file, 'rb')
         p = pyaudio.PyAudio()
@@ -70,8 +70,8 @@ class SpeechRecognition:
         stream.close()
         p.terminate()
 
-    def play_motDoux2(self):
-        filename = 'son/joie2.wav'
+    def play_motDoux2(self,emotion):
+        filename = self.select_motDoux(emotion)
         wave_obj = sa.WaveObject.from_wave_file(filename)
         play_obj = wave_obj.play()
         play_obj.wait_done()  # Wait until sound has finished playing
@@ -81,8 +81,8 @@ class SpeechRecognition:
         # return a file depending on the emotion entered
         #r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
         #return f"audio/{emotion}/{emotion}{r}.wav"
-        print(f"son/audio/{emotion}/{emotion}.wav")
-        return f"son/audio/{emotion}/{emotion}.wav"
+        print(f"son/{emotion}2.wav")
+        return f"{emotion}2.wav"
     
 
 
