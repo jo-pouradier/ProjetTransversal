@@ -1,18 +1,77 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
+    <script>
+        var usernameValid = false;
+
+
+        function checkUsername(event) {
+            if (event.keyCode === 13) { // Vérifie si la touche Entrée est enfoncée
+                event.preventDefault(); // Empêche le rechargement de la page par défaut
+
+
+                var usernameInput = document.getElementById("username");
+                var passwordInput = document.getElementById("password");
+                var username = usernameInput.value;
+
+
+                // Vérifie si l'identifiant est valide
+                // Vous pouvez utiliser votre propre logique de validation ici
+                var validUsernames = ["optimus"];
+
+
+                usernameValid = validUsernames.includes(username);
+
+
+                if (usernameValid) {
+                    document.getElementById("password_field").style.display = "block";
+                    usernameInput.readOnly = true; // Désactive la saisie de l'identifiant
+                    passwordInput.required = true;
+                    passwordInput.focus(); // Déplace le focus sur le champ de mot de passe
+                } else {
+                    document.getElementById("password_field").style.display = "none";
+                    passwordInput.required = false;
+                    // Affiche un message d'erreur sans réinitialiser l'identifiant
+                    document.getElementById("error_message").innerText = "Identifiant incorrect.";
+                }
+            }
+        }
+
+
+        function showPasswordInput() {
+            if (usernameValid) {
+                document.getElementById("password_field").style.display = "block";
+                document.getElementById("password").required = true;
+            }
+        }
+
+
+        // Désactive la saisie de l'identifiant si le champ est déjà valide
+        window.onload = function() {
+            var usernameInput = document.getElementById("username");
+            if (usernameValid) {
+                usernameInput.readOnly = true;
+            }
+        };
+    </script>
 </head>
 <body>
     <h1>Login</h1>
     {% if error %}
     <p>{{ error }}</p>
     {% endif %}
-    <form method="POST" action="{{ url_for('login') }}">
-        <input type="text" name="username" placeholder="Username">
-        <input type="password" name="password" placeholder="Password">
-        <input type="submit" value="Login">
+    <form method="post" action="/">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required onkeydown="checkUsername(event)">
+        <br>
+        <div id="password_field" style="display: none;">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+            <br>
+        </div>
+        <input type="button" value="Submit" onclick="checkUsername(event)">
+        <input type="submit" value="Login" style="display: none;">
     </form>
 </body>
 </html>
