@@ -6,6 +6,9 @@ import os
 import json
 import pyaudio
 import imutils
+import simpleaudio
+import speech_to_text 
+
 
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
@@ -266,6 +269,7 @@ def livecam():
 
 @app.route('/commandes', methods=['POST'])
 def deplacements():
+    sp = speech_to_text.SpeechRecognition()
     get_key = flask.request.get_json(force=True)
 
     # gestion du mode automatique
@@ -275,6 +279,10 @@ def deplacements():
     if get_key['key'] in COMMANDES.keys():
         ser.write(bytes(COMMANDES[get_key['key']], 'utf8'))
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    if get_key['key'] == 'k':
+        sp.play_motDoux2("joie")
+    if get_key['key'] == 'l':
+        sp.play_motDoux2("tristesse")
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 
