@@ -8,7 +8,8 @@ import speech_to_text
 import requests
 import time
 import pyaudio
-
+from scipy.signal import butter, lfilter
+import numpy as np
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
 #ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
@@ -197,6 +198,8 @@ def rec_sound():
         ## Adaptez ces paramètres 
         CHANNELS = 2
         RATE = 44100
+        high_cutoff = 1000
+        low_cutoff = 200
         
         # p = pyaudio.PyAudio()
         print("start")
@@ -204,12 +207,24 @@ def rec_sound():
         channels = 2
         wav_header = genHeader(RATE, bitsPerSample, channels)
         stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+        streamOut = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
         data = wav_header + stream.read(CHUNK_SIZE)
         while True:
                data += stream.read(CHUNK_SIZE)
-               yield(data)
+               streamOut.write(data)
+               data_np = np.frombuffer(data,dtype=np.int16)
+               input = data_np.astype(np.float32)
+               data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
+               yield(data_output.tobytes())
                
-
+def butter_bandpass(data, high_cutoff,low_cutoff, fs, order=2):
+    nyq = 0.4 * fs
+    high = high_cutoff/nyq
+    low = low_cutoff/nyq
+    b,a = butter(order, [low, high], btype='bandpass', analog=False)
+    y = lfilter(b,a,data)
+    y = y.astype(np.int16)
+    return y
         
 
 # --------------------------------------------------------------------------------------------
