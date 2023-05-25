@@ -1,8 +1,8 @@
 import speech_recognition as sr
 import pyaudio
 import wave
-
-
+import playsound
+import simpleaudio as sa
 # import math
 # import unidecode
 class SpeechRecognition:
@@ -13,12 +13,12 @@ class SpeechRecognition:
         self.listColere = ["colère"]
         self.listTristesse = ["tristesse"]
 
-    def continuous_speech_to_text(self, audio_bytes):
+    def continuous_speech_to_text(self):
         # Create a recognizer object
         r = sr.Recognizer()
 
         # Use the default microphone as the audio source
-        with sr.AudioFile(audio_bytes) as source:
+        with sr.Microphone() as source:
             # Adjust for ambient noise
             r.adjust_for_ambient_noise(source)
 
@@ -44,7 +44,7 @@ class SpeechRecognition:
                 if i in self.listJoie:
                     return self.play_motDoux("joie")
                 elif i in self.listColere:
-                    return self.play_motDoux("colere")
+                    return self.play_motDoux("colère")
                 elif i in self.listTristesse:
                     return self.play_motDoux("tristesse")
                 else:
@@ -54,8 +54,7 @@ class SpeechRecognition:
 
     def play_motDoux(self, emotion):
         # play the file selected
-        file = self.select_motDoux(emotion)
-        return file
+        file = "son/{emotion}2.wav"
         chunk = 1024
         wf = wave.open(file, 'rb')
         p = pyaudio.PyAudio()
@@ -71,15 +70,22 @@ class SpeechRecognition:
         stream.close()
         p.terminate()
 
+    def play_motDoux2(self,emotion):
+        filename = self.select_motDoux(emotion)
+        wave_obj = sa.WaveObject.from_wave_file(filename)
+        play_obj = wave_obj.play()
+        play_obj.wait_done()  # Wait until sound has finished playing
+
+
     def select_motDoux(self, emotion):
         # return a file depending on the emotion entered
         #r = math.random.randint(1, 10) # le 10 dépend du nombre de fichiers audio dans le dossier
         #return f"audio/{emotion}/{emotion}{r}.wav"
-        print(f"../../son/audio/{emotion}/{emotion}.wav")
-        return f"../../son/audio/{emotion}/{emotion}.wav"
+        print(f"son/{emotion}2.wav")
+        return f"{emotion}2.wav"
     
 
 
-# if __name__ == "__main__":
-#     a = SpeechRecognition()
-#     a.continuous_speech_to_text()
+if __name__ == "__main__":
+    a = SpeechRecognition()
+    a.play_motDoux2() 
