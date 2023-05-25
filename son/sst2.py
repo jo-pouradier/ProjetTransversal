@@ -1,17 +1,16 @@
 import pyaudio
 import wave
 import keyboard
-import speech_recognition as sr
 
 CHUNK = 1024  # taille des données audio
 FORMAT = pyaudio.paInt16  # format des données audio (16 bits)
 CHANNELS = 1  # nombre de canaux (stéréo)
 RATE = 44100  # fréquence d'échantillonnage (16 skHz)
-WAVE_OUTPUT_FILENAME = "enregistrement.wav"  # nom du fichiers
+WAVE_OUTPUT_FILENAME = "tristesse2.wav"  # nom du fichiers
 
 
 p = pyaudio.PyAudio()
-print('Début enregistrement')
+
 stream = p.open(format=FORMAT,
                 channels=CHANNELS,
                 rate=RATE,
@@ -19,7 +18,7 @@ stream = p.open(format=FORMAT,
                 frames_per_buffer=CHUNK)
 
 frames = []
-
+print('Début enregistrement')
 while True:
     data = stream.read(CHUNK)
     frames.append(data)
