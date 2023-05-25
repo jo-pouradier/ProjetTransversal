@@ -10,6 +10,8 @@ import time
 import pyaudio
 from scipy.signal import butter, lfilter
 import numpy as np
+import simpleaudio
+
 
 #ATTENTION : VERIFIER PORT + BAUD RATE
 #ser = serial.Serial('/dev/ttyACM0')#change this to the name of your port
@@ -192,6 +194,7 @@ def genHeader(sampleRate, bitsPerSample, channels):
 
 def rec_sound():
         p = pyaudio.PyAudio()
+        #sp= speech_to_text.SpeechRecognition()
         print('first sound')
         CHUNK_SIZE = 1024
         FORMAT = pyaudio.paInt16
@@ -207,15 +210,17 @@ def rec_sound():
         channels = 2
         wav_header = genHeader(RATE, bitsPerSample, channels)
         stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
-        streamOut = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+        #streamOut = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, output=True, frames_per_buffer=CHUNK_SIZE)
         data = wav_header + stream.read(CHUNK_SIZE)
+        #sp.continuous_speech_to_text()
+        
         while True:
                data += stream.read(CHUNK_SIZE)
-               streamOut.write(data)
-               data_np = np.frombuffer(data,dtype=np.int16)
-               input = data_np.astype(np.float32)
-               data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
-               yield(data_output.tobytes())
+               #streamOut.write(data)
+               #data_np = np.frombuffer(data,dtype=np.int16)
+               #input = data_np.astype(np.float32)
+               #data_output = butter_bandpass(input, high_cutoff, low_cutoff, RATE)
+               #yield(data_output.tobytes())
                
 def butter_bandpass(data, high_cutoff,low_cutoff, fs, order=2):
     nyq = 0.4 * fs
@@ -256,6 +261,7 @@ def livecam():
 
 @app.route('/commandes', methods=['POST'])
 def deplacements():
+    sp = speech_to_text.SpeechRecognition()
     get_key = flask.request.get_json(force=True)
 
     # gestion du mode automatique
@@ -265,8 +271,14 @@ def deplacements():
     if get_key['key'] in COMMANDES.keys():
         ser.write(bytes(COMMANDES[get_key['key']], 'utf8'))
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    
+    if get_key['key'] == 'k':
+        sp.play_motDoux2("joie")
+    if get_key['key'] == 'l':
+        sp.play_motDoux2("tristesse")
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
+   
 
 @app.route('/protected')
 def protected_route():
